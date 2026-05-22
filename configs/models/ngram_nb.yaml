@@ -1,0 +1,15 @@
+name: ngram_nb
+kind: trained
+implementation: language_id.models.trained.ngram_nb:NGramNBModel
+version: "0.0.1"
+vectorizer:
+  analyzer: char_wb
+  ngram_range: [2, 5]
+  min_df: 2
+  max_features: 2_000_000
+  sublinear_tf: false
+classifier:
+  alpha: 0.1
+  fit_prior: true
+training:
+  random_state: 42

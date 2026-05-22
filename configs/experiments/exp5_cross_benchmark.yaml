@@ -1,0 +1,25 @@
+experiment: exp5_cross_benchmark
+description: Run Experiment 2's trained classifiers against the full CommonLID test set; compare to Experiment 1.
+dataset: commonlid
+split: test
+models:
+  - logreg
+  - ngram_nb
+  - xlmr
+
+# Apply the same length-stratified sampling as exp1 so the comparison is apples-to-apples.
+sampling:
+  length_buckets:
+    short:  [25, 35]
+    medium: [35, 50]
+    long:   [50, 100]
+  per_language:
+    short:  100
+    medium: 100
+    long:   100
+  insufficient_data: include_what_exists
+  overrides: {}
+  seed: 42
+
+wandb:
+  project: lid-bench-exp5

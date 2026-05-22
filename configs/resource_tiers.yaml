@@ -1,0 +1,8 @@
+# Resource-tier thresholds computed from CommonVoiceLID line counts.
+# Regenerate the per-language JSON with: `language-id compute-tiers`
+thresholds:
+  high: 1_000_000   # >=1M lines
+  mid: 10_000       # 10k-1M lines
+  low: 0            # <10k lines
+
+output_path: src/language_id/languages/_tiers.json

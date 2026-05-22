@@ -1,0 +1,30 @@
+name: xlmr-lora
+kind: trained
+implementation: language_id.models.trained.xlmr:XLMRModel
+version: "0.0.1"
+base_model: xlm-roberta-large
+max_length: 256
+finetune:
+  strategy: lora    # one of: lora, full
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules: [query, key, value, output.dense]
+training:
+  num_train_epochs: 3
+  per_device_train_batch_size: 32
+  per_device_eval_batch_size: 64
+  learning_rate: 2.0e-4
+  warmup_ratio: 0.06
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1
+  bf16: true
+  logging_steps: 50
+  eval_strategy: epoch
+  save_strategy: epoch
+  load_best_model_at_end: true
+  metric_for_best_model: macro_f1
+  greater_is_better: true
+  report_to: wandb
+  seed: 42

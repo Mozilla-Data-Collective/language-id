@@ -1,0 +1,8 @@
+# Versioned override mapping from dataset/model language codes -> canonical BCP-47.
+# Used by `data/normalization.py` and `parsing/llm_output.py`.
+# Add entries here when a dataset or model emits a non-standard code that
+# `langcodes.standardize_tag` won't resolve.
+#
+# Format: <source_code>: <canonical_bcp47>
+version: 1
+mappings: {}

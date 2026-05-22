@@ -1,0 +1,8 @@
+name: glotlid
+kind: classical
+implementation: language_id.models.classical.glotlid_model:GlotLIDModel
+# TODO: confirm canonical HF repo / weights at implementation time
+hf_repo: cis-lmu/glotlid
+version: TBD
+options:
+  top_k: 1

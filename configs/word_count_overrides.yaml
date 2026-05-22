@@ -1,0 +1,14 @@
+# Per-language scaling factors mapping character count -> approximate word count
+# for languages without whitespace word boundaries.
+# Used by data/length_buckets.py::count_words.
+# Format: <bcp47-code>: <chars_per_word>
+chars_per_word:
+  zh: 1.5
+  zh-Hans: 1.5
+  zh-Hant: 1.5
+  ja: 1.5
+  th: 5.0
+  km: 5.0
+  lo: 5.0
+  my: 5.0
+  bo: 5.0

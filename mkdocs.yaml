@@ -1,0 +1,55 @@
+site_name: language-id
+site_description: Benchmarking and building text language identification
+site_url: https://mozilla-data-collective.github.io/language-id/
+repo_url: https://github.com/Mozilla-Data-Collective/language-id
+repo_name: Mozilla-Data-Collective/language-id
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Experiments:
+      - 1. Off-the-shelf evaluation: experiments/1-offshelf-eval.md
+      - 2. Train classifiers: experiments/2-train-classifiers.md
+      - 3. Marma OOD curve: experiments/3-marma-curve.md
+      - 4. Add your language: experiments/4-add-your-language.md
+      - 5. Cross-benchmark: experiments/5-cross-benchmark.md
+  - Language code reconciliation: language-code-reconciliation.md
+  - Results: results.md

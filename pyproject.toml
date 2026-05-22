@@ -1,0 +1,93 @@
+[build-system]
+requires = ["uv_build>=0.7.0,<0.10.0"]
+build-backend = "uv_build"
+
+[project]
+name = "language-id"
+version = "0.0.1"
+description = "Benchmarking and building text language identification with CommonLID and CommonVoiceLID."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Mozilla Data Collective" }]
+license = { text = "MPL" }
+keywords = ["language-identification", "lid", "nlp", "benchmark", "multilingual"]
+
+dependencies = [
+    # Core
+    "pandas>=2.2",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "pyyaml>=6.0",
+    "typer>=0.12",
+    "langcodes>=3.4",
+    "regex>=2024.0",
+    "diskcache>=5.6",
+    "wandb>=0.17",
+    "datacollective>=0.5.1",
+    # LLMs
+    "any-llm-sdk[platform, together]>=0.2",
+    # Standard LID tools
+    "langdetect>=1.0.9",
+    # Training
+    "huggingface-hub>=0.23",
+    "transformers>=4.42",
+    "torch>=2.3",
+    "scikit-learn>=1.5",
+    "peft>=0.11",
+    "accelerate>=0.31",
+    "datasets>=2.20",
+    # Plotting
+    "matplotlib>=3.9",
+    "plotly>=5.22",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.6",
+    "ty>=0.0.1a1",
+    "pre-commit>=3.7",
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.5",
+]
+
+[project.scripts]
+language-id = "language_id.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/Mozilla-Data-Collective/language-id"
+Documentation = "https://mozilla-data-collective.github.io/language-id/"
+
+[tool.uv.build-backend]
+module-name = "language_id"
+module-root = "src"
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+extend-exclude = ["docs", "results"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "RUF",
+]
+ignore = [
+    "E501",  # line length handled by formatter
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/language_id/experiments/*.py" = ["B", "SIM"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ty.src]
+root = "src"
+exclude = ["src/language_id/experiments"]
