@@ -1,6 +1,0 @@
-name: langdetect
-kind: standard
-implementation: language_id.models.standard.langdetect_model:LangdetectModel
-version: "1.0.9"
-options:
-  deterministic_seed: 0

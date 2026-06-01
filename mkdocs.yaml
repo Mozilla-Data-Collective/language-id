@@ -44,7 +44,6 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Architecture: architecture.md
   - Experiments:
       - 1. Off-the-shelf evaluation: experiments/1-offshelf-eval.md
       - 2. Train classifiers: experiments/2-train-classifiers.md
