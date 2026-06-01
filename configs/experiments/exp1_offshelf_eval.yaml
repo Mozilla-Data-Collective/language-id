@@ -1,12 +1,13 @@
 experiment: exp1_offshelf_eval
-description: Off-the-shelf evaluation of frontier LLMs and classical baselines on CommonLID.
+description: Off-the-shelf evaluation of frontier LLMs and standard baselines on CommonLID.
 dataset: commonlid
-split: test          # CommonLID is evaluation-only (spec §2.1)
+split: test
 models:
-  - gpt-5
-  - claude-opus-4
-  - qwen-3
-  - mistral-large
+  - deepseek-v4-pro
+  - gpt-oss-120b
+  - qwen3.7-max
+  - gpt-oss-20b  # (low-resource)
+  - gemma-4-31b-fp8  # (low-resource)
   - langdetect
   - glotlid
   - nllb-lid
