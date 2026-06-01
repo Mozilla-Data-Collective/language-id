@@ -1,6 +1,6 @@
-# Experiment 1 — Off-the-shelf evaluation on CommonLID
+# Experiment 1: Off-the-shelf evaluation on CommonLID
 
-Benchmark frontier LLMs and classical baselines on a length-stratified subsample of CommonLID.
+Benchmark frontier LLMs and standard baselines on a length-stratified subsample of CommonLID.
 
 ## Models
 
@@ -11,7 +11,7 @@ Benchmark frontier LLMs and classical baselines on a length-stratified subsample
 - Qwen 3.X (32B)
 - Mistral Large 2
 
-**Classical / specialist baselines**:
+**Standard / specialist baselines**:
 
 - `langdetect`
 - GlotLID

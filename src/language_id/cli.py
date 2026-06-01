@@ -3,9 +3,8 @@
 Flat command structure per spec §10:
     language-id eval         --model <id> --dataset <id> [--config <path>] [--limit N] [--checkpoint <dir>]
     language-id train        --model <id> --dataset <id> [--config <path>] [--limit N]
-    language-id add-language --code <bcp47> --data <path> [--config <path>]
+    language-id add-language --dataset <id> [--config <path>]
     language-id report       [--from results/] [--to docs/]
-    language-id cache        (clear|stats|inspect) [--model <id>]
     language-id compute-tiers
 """
 
@@ -23,11 +22,12 @@ import pandas as pd
 import typer
 import yaml
 
-from language_id.caching.llm_cache import LLMCache
 from language_id.data.loaders import (
     load_commonlid,
     load_commonvoice_lid,
+    load_dataset_by_id,
     load_marma,
+    resolve_text_col,
 )
 from language_id.data.sampling import SamplingConfig, length_stratified_sample
 from language_id.metrics.core import macro_f1, per_language_f1
@@ -83,16 +83,17 @@ def train(
 
 @app.command("add-language")
 def add_language(
-    code: str = typer.Option(..., "--code", help="BCP-47 language tag for the new language."),
-    data: Path = typer.Option(..., "--data", help="Path to JSONL ({text,lang}) or plain-text file."),
+    dataset: str = typer.Option(
+        ..., "--dataset", help="Mozilla Data Collective dataset ID for your corpus."
+    ),
     config: Path | None = typer.Option(
         None,
         "--config",
-        help="Experiment YAML (defaults to configs/experiments/exp3_marma_curve.yaml).",
+        help="Experiment YAML (defaults to configs/experiments/exp3_byodataset.yaml).",
     ),
 ) -> None:
-    """Experiment 4: data-efficiency curve on a user-supplied language corpus."""
-    _add_language_impl(code=code, data_path=data, config_path=config)
+    """Experiment 4: data-efficiency curve on a user-supplied datacollective dataset."""
+    _add_language_impl(dataset_id=dataset, config_path=config)
 
 
 @app.command()
@@ -117,49 +118,6 @@ def report(
     pages = _regen_tables(results_dir, docs_dir)
     for p in pages:
         typer.echo(f"  wrote {p.relative_to(_REPO_ROOT)}")
-
-
-cache_app = typer.Typer(name="cache", help="Manage the LLM disk cache.", no_args_is_help=True)
-app.add_typer(cache_app)
-
-
-def _llm_cache() -> LLMCache:
-    return LLMCache(_REPO_ROOT / ".diskcache" / "llm")
-
-
-@cache_app.command("clear")
-def cache_clear(model: str | None = typer.Option(None, "--model")) -> None:
-    """Clear cached LLM responses (optionally restricted to one model)."""
-    n = _llm_cache().clear(model)
-    scope = f"model={model}" if model else "all entries"
-    typer.echo(f"Cleared {n} cached responses ({scope}).")
-
-
-@cache_app.command("stats")
-def cache_stats(model: str | None = typer.Option(None, "--model")) -> None:
-    """Show cache size."""
-    stats = _llm_cache().stats()
-    typer.echo(json.dumps(stats, indent=2))
-
-
-@cache_app.command("inspect")
-def cache_inspect(model: str | None = typer.Option(None, "--model")) -> None:
-    """Inspect cached LLM responses (prints up to 20 keys)."""
-    cache = _llm_cache()
-    prefix = f"{model}|" if model else ""
-    shown = 0
-    for k in cache._cache:  # noqa: SLF001 — diskcache iteration is the public surface
-        if not isinstance(k, str):
-            continue
-        if prefix and not k.startswith(prefix):
-            continue
-        typer.echo(k)
-        shown += 1
-        if shown >= 20:
-            typer.echo(f"... (showing first {shown}; use --model to filter)")
-            return
-    if shown == 0:
-        typer.echo("No cached entries.")
 
 
 @app.command("compute-tiers")
@@ -231,7 +189,9 @@ def _resolve_dataset(
         return load_commonvoice_lid(split=split), "sentence", "lang"
     if dataset_id == "marma":
         return load_marma(), "text", "lang"
-    raise typer.BadParameter(f"unknown dataset: {dataset_id!r}")
+    # Bring-your-own-data: treat any other id as a datacollective dataset ID.
+    df = load_dataset_by_id(dataset_id)
+    return df, resolve_text_col(df), "lang"
 
 
 def _resolve_train_dataset(
@@ -262,32 +222,38 @@ def _resolve_train_dataset(
     )
 
 
-def _instantiate_model(model_cfg: dict[str, Any], cache: LLMCache | None = None) -> Any:
+def _instantiate_model(model_cfg: dict[str, Any]) -> Any:
     kind = model_cfg.get("kind")
-    if kind in {"classical", "trained"}:
+    if kind in {"standard", "trained"}:
         cls = _model_class(model_cfg.get("implementation", ""))
         extras = {k: v for k, v in model_cfg.items() if k not in _RESERVED_CFG_KEYS}
         return cls(**extras, **(model_cfg.get("options") or {}))
     if kind == "llm":
-        return _instantiate_llm(model_cfg, cache=cache)
+        return _instantiate_llm(model_cfg)
     raise typer.BadParameter(f"unsupported model kind: {kind!r}")
 
 
 def _instantiate_llm(
     model_cfg: dict[str, Any],
-    cache: LLMCache | None = None,
     few_shot_examples: list[tuple[str, str]] | None = None,
 ) -> Any:
-    from language_id.models.llm.any_llm_client import AnyLLMModel
+    provider = model_cfg["provider"]
+    if provider == "together":
+        from language_id.models.llm.together_client import TogetherModel
 
-    return AnyLLMModel(
+        cls: Any = TogetherModel
+    else:
+        from language_id.models.llm.any_llm_client import AnyLLMModel
+
+        cls = AnyLLMModel
+
+    return cls(
         name=model_cfg["name"],
         version=str(model_cfg.get("version", "TBD")),
-        provider=model_cfg["provider"],
+        provider=provider,
         model_id=model_cfg["model_id"],
         prompt=model_cfg["prompt"],
         client_options=model_cfg.get("client") or {},
-        cache=cache,
         few_shot_examples=few_shot_examples,
     )
 
@@ -370,8 +336,7 @@ def _eval_impl(
         model = cls.load(checkpoint)
     else:
         typer.echo(f"Instantiating model: {model_id}")
-        cache = LLMCache(_REPO_ROOT / ".diskcache" / "llm") if kind == "llm" else None
-        model = _instantiate_model(model_cfg, cache=cache)
+        model = _instantiate_model(model_cfg)
 
     typer.echo(f"Running predictions on {len(df)} examples…")
     preds = model.predict_batch(df[text_col].tolist())
@@ -517,16 +482,15 @@ def _train_impl(
     )
 
 
-def _add_language_impl(code: str, data_path: Path, config_path: Path | None) -> None:
-    from language_id.data.loaders import load_user_language_data
-    from language_id.experiments.exp3_marma_curve import (
+def _add_language_impl(dataset_id: str, config_path: Path | None) -> None:
+    from language_id.experiments.exp3_byodataset import (
         _plot_curve,
         _run_data_efficiency,
-        _split_marma,
+        _split_dataset,
     )
 
     cfg_path = config_path or (
-        _REPO_ROOT / "configs" / "experiments" / "exp3_marma_curve.yaml"
+        _REPO_ROOT / "configs" / "experiments" / "exp3_byodataset.yaml"
     )
     cfg = _load_yaml(cfg_path)
     de_cfg = cfg.get("data_efficiency")
@@ -535,27 +499,30 @@ def _add_language_impl(code: str, data_path: Path, config_path: Path | None) -> 
             f"config {cfg_path} has no `data_efficiency:` block"
         )
 
-    df = load_user_language_data(data_path, default_lang=code)
+    df = load_dataset_by_id(dataset_id)
     if df.empty:
-        raise typer.BadParameter(f"no rows loaded from {data_path}")
+        raise typer.BadParameter(f"no rows loaded from dataset {dataset_id!r}")
+    text_col = resolve_text_col(df)
     if df["lang"].nunique() == 1:
         typer.echo(
-            f"[add-language] WARNING: corpus is monolingual ({code}); "
+            f"[add-language] WARNING: dataset is monolingual ({df['lang'].iloc[0]}); "
             "the resulting curve only measures fit-to-one-class behavior. "
             "Mix in background languages for a meaningful classifier."
         )
 
-    train_pool, dev_df, test_df = _split_marma(df)
+    train_pool, dev_df, test_df = _split_dataset(df)
     typer.echo(
-        f"[add-language] code={code} train={len(train_pool)} dev={len(dev_df)} test={len(test_df)}"
+        f"[add-language] dataset={dataset_id} train={len(train_pool)} "
+        f"dev={len(dev_df)} test={len(test_df)} (text_col={text_col!r})"
     )
 
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out_root = _REPO_ROOT / "results" / "add_language" / f"{code}_{ts}"
+    safe_id = dataset_id.replace("/", "_")
+    out_root = _REPO_ROOT / "results" / "add_language" / f"{safe_id}_{ts}"
     out_root.mkdir(parents=True, exist_ok=True)
 
     de_df = _run_data_efficiency(
-        de_cfg, train_pool, dev_df, test_df, text_col="text", lang_col="lang"
+        de_cfg, train_pool, dev_df, test_df, text_col=text_col, lang_col="lang"
     )
     parquet_path = out_root / "data_efficiency.parquet"
     de_df.to_parquet(parquet_path, index=False)
@@ -563,8 +530,7 @@ def _add_language_impl(code: str, data_path: Path, config_path: Path | None) -> 
     _plot_curve(de_df, plot_path)
 
     summary = {
-        "code": code,
-        "data_path": str(data_path),
+        "dataset": dataset_id,
         "n_total": int(len(df)),
         "n_train": int(len(train_pool)),
         "n_dev": int(len(dev_df)),

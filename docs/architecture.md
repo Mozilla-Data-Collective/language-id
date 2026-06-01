@@ -1,10 +1,8 @@
 # Architecture
 
-This page describes the system design at a high level. The authoritative source is [`spec.md`](https://github.com/Mozilla-Data-Collective/language-id/blob/main/spec.md) in the repo root.
+## The `LIDModel` class
 
-## The `LIDModel` protocol
-
-Everything — frontier LLMs, langdetect, trained XLM-R — implements one interface (`src/language_id/models/base.py`):
+All models (e.g. frontier LLMs, langdetect, etc) are implemented under one interface (`src/language_id/models/base.py`):
 
 ```python
 @dataclass
@@ -26,7 +24,7 @@ The evaluation loop is identical regardless of model kind. Trained models additi
 
 The primary motivation is apples-to-apples comparison between CommonLID and CommonVoiceLID at matched sentence-length distributions per language. Bucket boundaries are defined in WORDS, and reporting uses the *same* bucket definitions as sampling (single source of truth).
 
-For non-spaced scripts (zh*, ja, th, km, lo, my, bo), word-counting via whitespace gives nonsense. The `count_words(text, lang_code)` function in `data/length_buckets.py` applies a per-language character-to-word scaling factor from `configs/word_count_overrides.yaml`.
+For non-spaced scripts (zh*, ja, th, km, lo, my, bo), word-counting via whitespace gives nonsense. The `count_words(text, lang_code)` function in `src/language_id/data/length_buckets.py` applies a per-language character-to-word scaling factor from in-module constants (`_CHARS_PER_WORD_OVERRIDES`).
 
 ## Language code normalization
 
@@ -43,15 +41,14 @@ Every run records: model snapshot ID, prompt template hash, config hash, random 
 | `data/` | Dataset loaders, BCP-47 normalization, length-stratified sampling. |
 | `languages/` | BCP-47 helpers, ISO 15924 script families, resource-tier lookup. |
 | `models/base.py` | The `LIDModel` protocol + `LIDPrediction` dataclass. |
-| `models/classical/` | langdetect, GlotLID, NLLB-LID (fastText-based). |
-| `models/llm/` | `AnyLLMModel` wrapping `any-llm`; shared retry/cache/parse base. |
+| `models/standard/` | langdetect, GlotLID, NLLB-LID (fastText-based). |
+| `models/llm/` | `AnyLLMModel` wrapping `any-llm` (+ `TogetherModel`); shared retry/parse base. |
 | `models/trained/` | LogReg, NGramNB (sklearn pipeline) and XLM-R LoRA (HF Trainer + PEFT). |
 | `parsing/llm_output.py` | Strip prefixes → `langcodes.find` → alias table → unparseable. |
-| `caching/llm_cache.py` | `diskcache` keyed by `(model, version, prompt_hash, text_hash)`. |
 | `metrics/` | Macro-F1, per-language F1, sliced metrics (length/script/tier), calibration. |
 | `reporting/` | `figures.py` and `tables.py` — regenerate `docs/figures/` + `docs/results.md`. |
 | `experiments/` | Thin orchestrators for Exp 1, 2, 3, 5 (Exp 4 is the `add-language` CLI). |
-| `cli.py` | Typer entry point; `eval`, `train`, `add-language`, `report`, `cache`, `compute-tiers`. |
+| `cli.py` | Typer entry point; `eval`, `train`, `add-language`, `report`, `compute-tiers`. |
 
 ## End-to-end flow
 

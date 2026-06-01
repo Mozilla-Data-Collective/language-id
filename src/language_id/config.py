@@ -24,7 +24,6 @@ class Settings(BaseSettings):
     repo_root: Path = Field(default_factory=lambda: Path(__file__).resolve().parents[2])
     configs_dir: Path = Field(default_factory=lambda: Path("configs"))
     results_dir: Path = Field(default_factory=lambda: Path("results"))
-    cache_dir: Path = Field(default_factory=lambda: Path(".diskcache"))
 
     # External services
     datacollective_api_key: str | None = None

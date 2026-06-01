@@ -1,5 +1,5 @@
 experiment: exp5_cross_benchmark
-description: Run Experiment 2's trained classifiers against the full CommonLID test set; compare to Experiment 1.
+description: Run Experiment 2's trained classifiers against the full CommonLID test set and compare to Experiment 1's results
 dataset: commonlid
 split: test
 models:
@@ -7,7 +7,7 @@ models:
   - ngram_nb
   - xlmr
 
-# Apply the same length-stratified sampling as exp1 so the comparison is apples-to-apples.
+# Apply the same length-stratified sampling as exp1 for a fair comparison
 sampling:
   length_buckets:
     short:  [25, 35]

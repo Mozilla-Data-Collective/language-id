@@ -1,6 +1,6 @@
 # LID Benchmark — Implementation Specification
 
-A hands-on, reproducible benchmarking project comparing frontier LLMs, classical tools, and custom-trained classifiers on text-based language identification across the web and transcribed-speech domains. Built around two open benchmarks — **CommonLID** (Common Crawl Foundation) and **CommonVoiceLID** (Mozilla Data Collective) — with explicit support for adding new languages.
+A hands-on, reproducible benchmarking project comparing frontier LLMs, standard tools, and custom-trained classifiers on text-based language identification across the web and transcribed-speech domains. Built around two open benchmarks — **CommonLID** (Common Crawl Foundation) and **CommonVoiceLID** (Mozilla Data Collective) — with explicit support for adding new languages.
 
 This document is the source of truth for implementation. Generate code that matches this spec; if anything here is ambiguous, flag it rather than guessing.
 
@@ -55,7 +55,7 @@ Benchmark these models on a length-stratified subsample of CommonLID (see §7 fo
 - Qwen 3.X (32B)
 - Mistral ( Mistral Large 2)
 
-**Classical / specialist baselines**:
+**Standard / specialist baselines**:
 - `langdetect` (Python package)
 - GlotLID
 - NLLB-200 LID head
@@ -151,9 +151,10 @@ language-id/
 │   ├── models/
 │   │   ├── base.py                # LIDModel protocol
 │   │   ├── llm/
-│   │   │   ├── base.py            # shared retry / cache / parse logic
+│   │   │   ├── base.py            # shared retry / parse logic
 │   │   │   ├── any_llm_client.py
-│   │   ├── classical/
+│   │   │   ├── together_client.py
+│   │   ├── standard/
 │   │   │   ├── langdetect_model.py
 │   │   │   ├── glotlid_model.py
 │   │   │   └── nllb_lid_model.py
@@ -164,9 +165,6 @@ language-id/
 │   │
 │   ├── parsing/
 │   │   └── llm_output.py          # free text → BCP-47, tracks unparseable rate
-│   │
-│   ├── caching/
-│   │   └── llm_cache.py           # disk-backed, keyed by (model, version, prompt_hash, text_hash)
 │   │
 │   ├── metrics/
 │   │   ├── core.py                # macro-F1, per-lang F1, confusion matrix
@@ -184,7 +182,7 @@ language-id/
 │   └── experiments/
 │       ├── exp1_offshelf_eval.py
 │       ├── exp2_train_classifiers.py
-│       ├── exp3_marma_curve.py
+│       ├── exp3_byodataset.py
 │       └── exp5_cross_benchmark.py
 │
 └── results/                       # local artifacts (parquet, json) — gitignored
@@ -202,7 +200,6 @@ language-id/
 | Pre-commit            | `ruff` + `ty`                                                                                           |
 | Config                | pydantic-settings + YAML (no Hydra)                                                                     |
 | CLI                   | Typer, flat style: `language-id eval --model gpt-5 --dataset commonlid`                               |
-| LLM cache             | `diskcache`, keyed by `(model, version, prompt_template_hash, text_hash)`                               |
 | Language code library | `langcodes`, canonical form = BCP-47 (Common Voice standard)                                            |
 | Tracking              | Weights & Biases (`wandb`, `wandb.sklearn` plots, HF `Trainer` integration via `report_to="wandb"`)     |
 | Docs                  | mkdocs + Material theme, static markdown, figures committed under `docs/figures/`                       |
@@ -278,7 +275,7 @@ sampling:
 ### 7.2 Word-counting
 - Default tokenizer: unicode-aware whitespace split via `regex` package (`\p{L}+`).
 - For languages without whitespace word boundaries (Chinese `zh*`, Japanese `ja`, Thai `th`, Khmer `km`, Lao `lo`, Burmese `my`, Tibetan `bo`), word-counting via whitespace gives nonsense. For these:
-  - Apply a **per-language scaling factor** that maps character count → approximate word count, configurable in `configs/word_count_overrides.yaml`. Reasonable defaults: ~1.5 chars/word for zh/ja, ~5 chars/word for th/km/lo/my/bo.
+  - Apply a **per-language scaling factor** that maps character count → approximate word count, defined in-code in `src/language_id/data/length_buckets.py` (constant `_CHARS_PER_WORD_OVERRIDES`). Reasonable defaults: ~1.5 chars/word for zh/ja, ~5 chars/word for th/km/lo/my/bo.
   - Implementer should expose this as a clean function `count_words(text: str, lang_code: str) -> int` in `data/length_buckets.py`.
 - Document this clearly in the architecture docs.
 
@@ -349,7 +346,6 @@ language-id eval        --model <id> --dataset <id> [--config <path>] [--limit N
 language-id train       --model <id> --dataset <id> [--config <path>]
 language-id add-language --code <bcp47> --data <path> [--config <path>]
 language-id report      [--from results/] [--to docs/]
-language-id cache       (clear|stats|inspect) [--model <id>]
 ```
 
 - `eval` runs a single (model, dataset) evaluation and writes predictions to `results/predictions/<model>_<dataset>_<timestamp>.parquet` and metrics to `results/metrics/`.
@@ -409,9 +405,9 @@ A small CLI subcommand `language-id compute-tiers` regenerates the JSON. The ful
 
 Project metadata, Python ≥3.12. Dependency groups:
 
-- **Core**: `pandas`, `pydantic`, `pydantic-settings`, `pyyaml`, `typer`, `langcodes`, `regex`, `diskcache`, `wandb`, `datacollective`
+- **Core**: `pandas`, `pydantic`, `pydantic-settings`, `pyyaml`, `typer`, `langcodes`, `regex`, `wandb`, `datacollective`
 - **LLMs**: `any-llm`
-- **Classical**: `langdetect`, `fasttext-langdetect` (for GlotLID/NLLB-LID loading — use `huggingface_hub` to fetch weights), `transformers`, `torch`
+- **Standard**: `langdetect`, `fasttext-langdetect` (for GlotLID/NLLB-LID loading — use `huggingface_hub` to fetch weights), `transformers`, `torch`
 - **Training**: `scikit-learn`, `transformers`, `peft` (for LoRA), `accelerate`, `datasets`
 - **Plotting**: `matplotlib`, `plotly`
 - **Dev**: `ruff`, `ty`, `pre-commit`, `mkdocs`, `mkdocs-material`
@@ -457,9 +453,9 @@ Stored in `results/runs.jsonl` and the W&B run config.
 1. `pyproject.toml`, `.pre-commit-config.yaml`, `mkdocs.yaml`, GH workflow — get scaffolding right first.
 2. `data/loaders.py` + `data/normalization.py` + `languages/codes.py` — get datasets loading and normalized.
 3. `data/length_buckets.py` + `data/sampling.py` — get length-stratified sampling working with a small example.
-4. `models/base.py` + one classical model (`langdetect_model.py`) — prove the protocol end-to-end.
+4. `models/base.py` + one standard model (`langdetect_model.py`) — prove the protocol end-to-end.
 5. `metrics/core.py` + `metrics/sliced.py` + a minimal CLI `eval` command — run langdetect on a sampled CommonLID slice, log to W&B, see metrics.
-6. Add remaining classical models, then LLMs (with caching).
+6. Add remaining standard models, then LLMs (with caching).
 7. Trained classifiers (LogReg, NB, XLM-R with LoRA).
 8. Experiment 3 (Marma curve), Experiment 4 (add-language CLI), Experiment 5 (cross-benchmark).
 9. `reporting/figures.py` + `reporting/tables.py` + `language-id report`.

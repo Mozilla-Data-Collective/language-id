@@ -1,46 +1,39 @@
-"""Word-count bucketing utilities for length-stratified sampling (spec §7.2)."""
-
-from __future__ import annotations
-
-from functools import lru_cache
-from pathlib import Path
 from typing import Literal
 
 import regex
-import yaml
 
 LengthBucket = Literal["short", "medium", "long"]
 
-# configs/word_count_overrides.yaml lives at the repo root, alongside pyproject.toml.
-# This module sits at src/language_id/data/length_buckets.py, so the repo root is parents[3].
-_OVERRIDES_PATH = (
-    Path(__file__).resolve().parents[3] / "configs" / "word_count_overrides.yaml"
-)
+# Per-language scaling factors mapping character count -> approximate word count
+# for languages without whitespace word boundaries.
+_CHARS_PER_WORD_OVERRIDES: dict[str, float] = {
+    "zh": 1.5,
+    "zh-Hans": 1.5,
+    "zh-Hant": 1.5,
+    "ja": 1.5,
+    "th": 5.0,
+    "km": 5.0,
+    "lo": 5.0,
+    "my": 5.0,
+    "bo": 5.0,
+}
+
 _WORD_PATTERN = regex.compile(r"\p{L}+")
 
-
-@lru_cache(maxsize=1)
-def _load_chars_per_word() -> dict[str, float]:
-    if not _OVERRIDES_PATH.exists():
-        return {}
-    data = yaml.safe_load(_OVERRIDES_PATH.read_text()) or {}
-    raw = data.get("chars_per_word") or {}
-    return {str(k): float(v) for k, v in raw.items()}
 
 
 def count_words(text: str, lang_code: str) -> int:
     """Return an approximate word count for `text`.
 
     - Default: unicode-aware word-token count via `regex` (`\\p{L}+`).
-    - For non-spaced scripts (zh*, ja, th, km, lo, my, bo): apply a per-language
-      `chars_per_word` factor from `configs/word_count_overrides.yaml`. Falls
-      back to the primary language subtag (e.g. "zh-CN" → "zh").
+    - For non-spaced scripts (zh*, ja, th, km, lo, my, bo): apply an in-module
+      `chars_per_word` factor. Falls back to the primary language subtag
+      (e.g. "zh-CN" -> "zh").
     """
-    overrides = _load_chars_per_word()
-    factor = overrides.get(lang_code)
+    factor = _CHARS_PER_WORD_OVERRIDES.get(lang_code)
     if factor is None:
         primary = lang_code.split("-")[0]
-        factor = overrides.get(primary)
+        factor = _CHARS_PER_WORD_OVERRIDES.get(primary)
     if factor is not None:
         letter_count = sum(len(m) for m in _WORD_PATTERN.findall(text))
         return int(round(letter_count / factor))

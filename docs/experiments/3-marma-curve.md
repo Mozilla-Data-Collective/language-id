@@ -8,8 +8,10 @@ Marma appears in neither benchmark. Two parts:
 ## Running
 
 ```bash
-uv run python -m language_id.experiments.exp3_marma_curve configs/experiments/exp3_marma_curve.yaml
+uv run python -m language_id.experiments.exp3_byodataset configs/experiments/exp3_byodataset.yaml
 ```
 
+The experiment loads whatever dataset ID is set under `dataset:` in the config (via `datacollective`, exactly like CommonLID / CommonVoiceLID). Marma is just the default; swap in any Mozilla Data Collective dataset ID — that's also how [Experiment 4](4-add-your-language.md) brings in a new language.
+
 !!! note
-    The Marma loader name in `datacollective` is an open item (spec §16). The first run will surface the exact loader identifier; pin it in `configs/experiments/exp3_marma_curve.yaml`.
+    Set the Marma `dataset:` ID in `configs/experiments/exp3_byodataset.yaml` before the first run.

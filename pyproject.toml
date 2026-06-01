@@ -21,7 +21,6 @@ dependencies = [
     "typer>=0.12",
     "langcodes>=3.4",
     "regex>=2024.0",
-    "diskcache>=5.6",
     "wandb>=0.17",
     "datacollective>=0.5.1",
     # LLMs
@@ -39,6 +38,7 @@ dependencies = [
     # Plotting
     "matplotlib>=3.9",
     "plotly>=5.22",
+    "language-data>=1.4.0",
 ]
 
 [project.optional-dependencies]

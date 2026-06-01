@@ -1,16 +1,16 @@
-name: qwen-3-32b
+name: qwen3.7-max
 kind: llm
-# TODO: pick provider at experiment start. Options include `ollama` (local; requires
-# the `any-llm-sdk[ollama]` extra, not currently installed) or a hosted endpoint such
-# as Together / DeepInfra via the `openai`-compatible API. Lock the snapshot ID too.
-provider: TBD
-model_id: qwen3:32b
+# Served via Together (the `together` extra is installed in pyproject). Requires
+# TOGETHER_API_KEY in the environment. Lock the exact snapshot ID at experiment start.
+provider: together
+model_id: Qwen/Qwen3.7-Max
 version: TBD
 client:
   temperature: 0.0
   max_tokens: 64
   timeout_s: 120
   max_retries: 3
+  stream: true  # this Qwen snapshot only supports streaming on Together
 prompt:
   system: |
     You are a language identification system. Given a piece of text, identify

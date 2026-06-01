@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from language_id.caching.llm_cache import LLMCache
 from language_id.models.llm.base import BaseLLMModel
 
 
@@ -12,8 +11,7 @@ class AnyLLMModel(BaseLLMModel):
     """LID model wrapping `any_llm.completion` for OpenAI / Anthropic / Mistral / Ollama / etc.
 
     Few-shot examples (if any) are injected as alternating user/assistant turns
-    between the system prompt and the final user message. The example set is
-    folded into `prompt_hash` so cache entries are scoped to the shot config.
+    between the system prompt and the final user message.
     """
 
     def __init__(
@@ -24,19 +22,13 @@ class AnyLLMModel(BaseLLMModel):
         model_id: str,
         prompt: dict[str, str],
         client_options: dict[str, Any] | None = None,
-        cache: LLMCache | None = None,
         few_shot_examples: list[tuple[str, str]] | None = None,
     ) -> None:
         opts = client_options or {}
         examples = list(few_shot_examples or [])
-        flat_examples = [s for pair in examples for s in pair]
         super().__init__(
             name=name,
             version=version,
-            prompt_hash=LLMCache.hash_prompt(
-                prompt["system"], prompt["user_template"], *flat_examples
-            ),
-            cache=cache,
             max_retries=int(opts.get("max_retries", 3)),
         )
         self.provider = provider

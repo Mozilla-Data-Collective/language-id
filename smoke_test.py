@@ -1,5 +1,5 @@
 from language_id.data.loaders import load_commonvoice_lid
-from language_id.models.classical.langdetect_model import LangdetectModel
+from language_id.models.standard.langdetect_model import LangdetectModel
 
 # df = load_commonvoice_lid("dev").sample(200, random_state=0)
 # m = LangdetectModel()

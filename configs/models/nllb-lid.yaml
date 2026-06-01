@@ -1,6 +1,6 @@
 name: nllb-lid
-kind: classical
-implementation: language_id.models.classical.nllb_lid_model:NLLBLIDModel
+kind: standard
+implementation: language_id.models.standard.nllb_lid_model:NLLBLIDModel
 # TODO: confirm canonical HF repo / weights at implementation time (spec §16).
 # Note: the official NLLB LID head ships as fastText weights; either add a
 # `fasttext` dependency back, or use a re-packaged transformers checkpoint.

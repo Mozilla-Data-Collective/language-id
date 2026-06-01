@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from language_id.models.classical._fasttext_base import FastTextLIDBase
+from language_id.models.standard._fasttext_base import FastTextLIDBase
 
 
 class GlotLIDModel(FastTextLIDBase):

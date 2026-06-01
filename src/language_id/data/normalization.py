@@ -1,7 +1,3 @@
-"""Normalize dataset language codes to BCP-47 at load time (spec §8)."""
-
-from __future__ import annotations
-
 import pandas as pd
 
 from language_id.languages.codes import to_bcp47

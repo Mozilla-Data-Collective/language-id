@@ -1,6 +1,6 @@
 """The `LIDModel` protocol (spec §6).
 
-Every model — frontier LLM, classical baseline, trained classifier — implements
+Every model — frontier LLM, standard baseline, trained classifier — implements
 this interface. The evaluation loop is identical regardless of model kind.
 """
 

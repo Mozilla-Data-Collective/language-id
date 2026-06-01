@@ -1,6 +1,6 @@
-experiment: exp3_marma_curve
-description: OOD case study on Marma. Zero/few-shot LLM eval + data-efficiency curve for trained classifiers.
-dataset: marma            # TODO: confirm loader identifier in `datacollective` (spec §16)
+experiment: exp3_byodataset
+description: Bring-your-own-dataset. Zero/few-shot LLM eval + data-efficiency curve for trained classifiers.
+dataset: <add MDC dataset ID>
 
 llm_eval:
   models:

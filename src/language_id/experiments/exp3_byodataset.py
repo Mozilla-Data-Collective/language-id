@@ -1,7 +1,11 @@
-"""Experiment 3 — OOD case study (Marma) + data-efficiency curve (spec §3).
+"""Experiment 3 — bring-your-own-dataset OOD case study + data-efficiency curve (spec §3).
+
+The dataset is supplied by ID in the experiment config (`dataset:`) and loaded
+via `datacollective`, exactly like CommonLID / CommonVoiceLID. Marma is just the
+default dataset for this experiment.
 
 Two halves:
-- Zero/few-shot LLM eval on Marma test.
+- Zero/few-shot LLM eval on the dataset's test split.
 - Data-efficiency curve: train each of LogReg / NGramNB / XLM-R on
   n ∈ {10, 50, 100, 500, 1000} with multiple seeds; plot accuracy vs. n.
 """
@@ -17,7 +21,6 @@ import numpy as np
 import pandas as pd
 import typer
 
-from language_id.caching.llm_cache import LLMCache
 from language_id.cli import (
     _compute_metrics_bundle,
     _instantiate_llm,
@@ -25,7 +28,7 @@ from language_id.cli import (
     _load_model_cfg,
     _load_yaml,
 )
-from language_id.data.loaders import load_marma
+from language_id.data.loaders import load_dataset_by_id, resolve_text_col
 from language_id.metrics.core import macro_f1
 from language_id.models.trained._sklearn_base import SklearnPipelineLIDModel
 
@@ -33,30 +36,21 @@ _REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 # ---------------------------------------------------------------------------
-# Marma loading / splitting
+# Dataset loading / splitting
 # ---------------------------------------------------------------------------
 
 
-def _load_marma_safe() -> pd.DataFrame:
+def _load_dataset_safe(dataset_id: str) -> pd.DataFrame:
     try:
-        return load_marma()
+        return load_dataset_by_id(dataset_id)
     except Exception as e:
         raise RuntimeError(
-            f"Marma loader failed: {e}. Confirm dataset ID in data/loaders.py "
-            "(spec §16 lists this as an open item)."
+            f"failed to load dataset {dataset_id!r}: {e}. Confirm the `dataset:` "
+            "ID in the experiment config is a valid datacollective dataset."
         ) from e
 
 
-def _resolve_text_col(df: pd.DataFrame) -> str:
-    for col in ("text", "sentence"):
-        if col in df.columns:
-            return col
-    raise RuntimeError(
-        f"Marma dataframe has no 'text' or 'sentence' column; got {list(df.columns)}"
-    )
-
-
-def _split_marma(
+def _split_dataset(
     df: pd.DataFrame, seed: int = 42
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Return (train_pool, dev, test). Honors a `split` column if present, else 80/10/10 random."""
@@ -98,7 +92,7 @@ def _sample_few_shot(
     return list(zip(sub[text_col].tolist(), sub[lang_col].tolist(), strict=True))
 
 
-def _run_llm_marma_eval(
+def _run_llm_eval(
     llm_cfg: dict[str, Any],
     train_df: pd.DataFrame,
     test_df: pd.DataFrame,
@@ -107,7 +101,6 @@ def _run_llm_marma_eval(
     out_dir: Path,
     ts: str,
 ) -> pd.DataFrame:
-    cache = LLMCache(_REPO_ROOT / ".diskcache" / "llm")
     rows: list[dict[str, Any]] = []
     preds_dir = out_dir / "predictions"
     preds_dir.mkdir(parents=True, exist_ok=True)
@@ -117,14 +110,14 @@ def _run_llm_marma_eval(
         for n_shots in llm_cfg.get("shots", [0]):
             shots = _sample_few_shot(train_df, n_shots, text_col, lang_col, seed=42)
             typer.echo(f"[exp3-llm] model={model_id} shots={n_shots}")
-            model = _instantiate_llm(model_cfg, cache=cache, few_shot_examples=shots)
+            model = _instantiate_llm(model_cfg, few_shot_examples=shots)
             preds = model.predict_batch(test_df[text_col].tolist())
             out = test_df.copy()
             out["pred"] = [p.lang_code for p in preds]
             out["confidence"] = [p.confidence for p in preds]
             out["raw_output"] = [p.raw_output for p in preds]
             metrics = _compute_metrics_bundle(out, lang_col)
-            run_id = f"exp3_{model_id}_marma_shots{n_shots}_{ts}"
+            run_id = f"exp3_{model_id}_shots{n_shots}_{ts}"
             out.to_parquet(preds_dir / f"{run_id}.parquet", index=False)
             rows.append(
                 {
@@ -266,17 +259,21 @@ def run(config_path: Path) -> None:
     out_dir = _REPO_ROOT / "results" / "experiments"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    df = _load_marma_safe()
-    text_col = _resolve_text_col(df)
+    dataset_id = cfg.get("dataset")
+    if not dataset_id:
+        raise RuntimeError(f"config {config_path} has no `dataset:` ID")
+
+    df = _load_dataset_safe(dataset_id)
+    text_col = resolve_text_col(df)
     lang_col = "lang"
-    train_pool, dev_df, test_df = _split_marma(df)
+    train_pool, dev_df, test_df = _split_dataset(df)
     typer.echo(
-        f"[exp3] train={len(train_pool)} dev={len(dev_df)} test={len(test_df)} "
-        f"(text_col={text_col!r})"
+        f"[exp3] dataset={dataset_id} train={len(train_pool)} dev={len(dev_df)} "
+        f"test={len(test_df)} (text_col={text_col!r})"
     )
 
     if "llm_eval" in cfg:
-        llm_summary = _run_llm_marma_eval(
+        llm_summary = _run_llm_eval(
             cfg["llm_eval"], train_pool, test_df, text_col, lang_col, out_dir, ts
         )
         llm_path = out_dir / f"exp3_llm_few_shot_{ts}.parquet"
