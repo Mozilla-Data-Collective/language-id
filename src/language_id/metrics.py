@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 import pandas as pd
 
-from language_id.codes import language_name
+from language_id.lang_codes_mapping import language_name
 
 
 def accuracy(gold: Sequence[str], pred: Sequence[str]) -> float:

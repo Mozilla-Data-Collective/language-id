@@ -3,7 +3,7 @@ from typing import Any
 import pandas as pd
 
 from language_id import metrics
-from language_id.codes import to_iso3
+from language_id.lang_codes_mapping import to_iso3
 from language_id.data import TEXT_COLUMN_NAME
 from language_id.models import LIDModel
 

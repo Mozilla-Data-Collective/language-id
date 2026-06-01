@@ -1,7 +1,7 @@
 import time
 from typing import Any
 
-from language_id.codes import to_iso3
+from language_id.lang_codes_mapping import to_iso3
 from language_id.models.base import LIDPrediction
 
 SYSTEM_PROMPT = (

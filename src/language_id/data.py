@@ -1,7 +1,7 @@
 import pandas as pd
 from datacollective import load_dataset
 
-from language_id.codes import to_iso3
+from language_id.lang_codes_mapping import to_iso3
 
 COMMON_LID_DATASET_ID = "commonlid-622f6f75"
 COMMON_VOICE_LID_DATASET_ID = "mozilla-common-voice-text-language-ident-b1b3aae0"
