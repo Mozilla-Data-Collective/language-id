@@ -4,11 +4,9 @@ LLMs are served via the Together SDK (add entries to `TOGETHER_MODELS`).
 Standard tools are langdetect / GlotLID / NLLB-LID.
 """
 
-from __future__ import annotations
-
 from language_id.models.base import LIDModel, LIDPrediction
 
-# Short name -> Together model ID. Extend freely.
+# Short name -> Together model ID
 TOGETHER_MODELS = {
     "qwen": "Qwen/Qwen3.7-Max",
     "gemma": "google/gemma-4-31B-it",

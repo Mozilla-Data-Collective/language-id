@@ -1,5 +1,5 @@
 """
-Thin CLI: evaluate a model on a sampled dataset, per language.
+CLI: evaluate a model on a sampled dataset, per language.
 
     language-id eval --model qwen --n 10
     language-id eval --model langdetect --dataset commonlid --n 50 --langs eng,kab
@@ -18,6 +18,7 @@ from language_id.data import (
 )
 from language_id.evaluate import evaluate
 from language_id.models import available_models, get_model
+from language_id.reporting import save_run
 
 app = typer.Typer(
     name="language-id",
@@ -49,7 +50,9 @@ def eval(
         None, "--langs", help="Comma-separated languages to restrict to (codes or names)."
     ),
     seed: int = typer.Option(0, "--seed", help="Sampling seed."),
-    save: bool = typer.Option(False, "--save", help="Write predictions + per-language CSV to results/."),
+    save: bool = typer.Option(
+        True, "--save/--no-save", help="Save predictions, metrics, and graphs to results/."
+    ),
 ) -> None:
     """Sample `n` rows per language and evaluate `model` on them."""
     typer.echo(f"Loading dataset: {dataset}")
@@ -71,10 +74,8 @@ def eval(
     if save:
         out_dir = _REPO_ROOT / "results"
         out_dir.mkdir(parents=True, exist_ok=True)
-        stem = f"{model}_{dataset.replace('/', '_')}"
-        predictions.to_csv(out_dir / f"{stem}_predictions.csv", index=False)
-        per_lang.to_csv(out_dir / f"{stem}_per_language.csv", index=False)
-        typer.echo(f"\nSaved to {out_dir}/{stem}_*.csv")
+        run_dir = save_run(out_dir, model, dataset, overall, per_lang, predictions)
+        typer.echo(f"\nSaved predictions, metrics, and graphs to {run_dir}")
 
 
 @app.command()
@@ -85,7 +86,7 @@ def models() -> None:
 
 
 def _fmt(codes: set[str]) -> str:
-    from language_id.codes import language_name
+    from language_id.lang_codes_mapping import language_name
 
     rows = sorted((language_name(c), c) for c in codes)
     return "\n".join(f"  {c:<8} {name}" for name, c in rows) or "  (none)"
