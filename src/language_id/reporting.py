@@ -1,20 +1,5 @@
-"""Persist an evaluation run: predictions, results, metrics, and graphs.
-
-Each call to `save_run` creates a timestamped directory under `results/` holding
-everything produced by one evaluation, plus appends a one-line summary to
-`results/runs.jsonl` for cross-run comparison.
-
-    results/<model>_<dataset>_<timestamp>/
-        predictions.csv      every row with gold, pred, confidence, raw_output
-        per_language.csv      per-language support / accuracy / precision / f1
-        metrics.json          overall results + per-language metrics
-        plots/per_language_f1.png
-        plots/per_language_metrics.png
-        plots/confusion_matrix.png
-"""
-
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -25,10 +10,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def _timestamp() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-
-
 def save_run(
     out_root: Path,
     model: str,
@@ -37,8 +18,21 @@ def save_run(
     per_lang: pd.DataFrame,
     predictions: pd.DataFrame,
 ) -> Path:
-    """Write predictions, metrics, and graphs for one run and return the run directory."""
-    timestamp = _timestamp()
+    """Persist an evaluation run: predictions, results, metrics, and graphs.
+
+    Each call to `save_run` creates a timestamped directory under `results/` holding
+    everything produced by one evaluation, plus appends a one-line summary to
+    `results/runs.jsonl` for cross-run comparison.
+
+        results/<model>_<dataset>_<timestamp>/
+            predictions.csv      every row with gold, pred, confidence, raw_output
+            per_language.csv      per-language support / accuracy / precision / f1
+            metrics.json          overall results + per-language metrics
+            plots/per_language_f1.png
+            plots/per_language_metrics.png
+            plots/confusion_matrix.png
+    """
+    timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     stem = f"{model}_{dataset.replace('/', '_')}_{timestamp}"
     run_dir = out_root / stem
     plots_dir = run_dir / "plots"
@@ -79,13 +73,15 @@ def save_run(
 
 
 def _label(per_lang: pd.DataFrame) -> pd.Series:
-    """Readable per-language axis labels: "name (code)" when a name exists."""
-    if "name" in per_lang.columns:
-        return per_lang.apply(
-            lambda r: f"{r['name']} ({r['lang']})" if pd.notna(r["name"]) else str(r["lang"]),
-            axis=1,
-        )
-    return per_lang["lang"].astype(str)
+    """Per-language axis labels with sample count: "name (code, n=123)"."""
+
+    def fmt(r: pd.Series) -> str:
+        base = r["name"] if "name" in r and pd.notna(r["name"]) else r["lang"]
+        if "support" in r and pd.notna(r["support"]):
+            return f"{base} ({r['lang']}, n={int(r['support'])})"
+        return f"{base} ({r['lang']})"
+
+    return per_lang.apply(fmt, axis=1)
 
 
 def _plot_per_language_f1(per_lang: pd.DataFrame, path: Path) -> None:
@@ -141,13 +137,17 @@ def _plot_confusion_matrix(predictions: pd.DataFrame, path: Path) -> None:
         index=gold_labels, columns=col_labels, fill_value=0
     )
 
+    # Gold-axis labels carry the sample count per language.
+    gold_counts = predictions["lang"].value_counts()
+    gold_tick_labels = [f"{g} (n={int(gold_counts.get(g, 0))})" for g in gold_labels]
+
     size = max(6.0, 0.4 * len(col_labels))
     fig, ax = plt.subplots(figsize=(size, max(6.0, 0.4 * len(gold_labels))))
-    im = ax.imshow(cm.values, cmap="Blues", aspect="auto")
+    im = ax.imshow(cm.to_numpy(), cmap="Blues", aspect="auto")
     ax.set_xticks(range(len(col_labels)))
     ax.set_xticklabels(col_labels, rotation=90, fontsize=7)
     ax.set_yticks(range(len(gold_labels)))
-    ax.set_yticklabels(gold_labels, fontsize=7)
+    ax.set_yticklabels(gold_tick_labels, fontsize=7)
     ax.set_xlabel("predicted")
     ax.set_ylabel("gold")
     ax.set_title("Confusion matrix")
