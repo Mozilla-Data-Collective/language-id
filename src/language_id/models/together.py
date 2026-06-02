@@ -16,7 +16,7 @@ USER_TEMPLATE = "Text:\n{text}\n\nISO 639-3 code:"
 TOGETHER_MODELS = {
     # "deepseek": "deepseek-ai/deepseek-v4-pro",  # 1.6T params (49B activated) - reasoning
     # "minimax-m27": "MiniMaxAI/MiniMax-M2.7",  # 230b, 10b activated
-    "qwen": "Qwen/Qwen3.7-Max",  # closed source / 1T - reasoning
+    # "qwen": "Qwen/Qwen3.7-Max",  # closed source / 1T - reasoning
     "gpt-oss-120b": "openai/gpt-oss-120b",  # 120b
     "gemma": "google/gemma-4-31B-it",  # 32b
     "gpt-oss-20b": "openai/gpt-oss-20b",  # 20b
@@ -40,7 +40,7 @@ class TogetherModel:
         temperature: float = 0.0,
         # Output-token ceiling. Reasoning models (e.g. gpt-oss) also spend tokens
         # here on hidden reasoning, so too small a cap leaves no room for the code.
-        max_tokens: int = 512,
+        max_output_tokens: int = 512,
         timeout_s: int = 120,
         max_retries: int = 3,
         # Calls are I/O-bound HTTP requests, so run a batch concurrently. Bump
@@ -51,7 +51,7 @@ class TogetherModel:
         self.model_id = model_id
         self.name = name or model_id
         self.temperature = temperature
-        self.max_tokens = max_tokens
+        self.max_output_tokens = max_output_tokens
         self.timeout_s = timeout_s
         self.max_retries = max_retries
         self.max_workers = max_workers
@@ -79,7 +79,7 @@ class TogetherModel:
             model=self.model_id,
             messages=self._messages(text),
             temperature=self.temperature,
-            max_tokens=self.max_tokens,
+            max_tokens=self.max_output_tokens,
             timeout=self.timeout_s,
         )
         return completion.choices[0].message.content or ""
