@@ -4,9 +4,9 @@ from typing import Protocol, runtime_checkable
 
 @dataclass
 class LIDPrediction:
-    lang_code: str                  # ISO-639-3, e.g. "eng", "kab" (or "und")
-    confidence: float | None        # 0.0-1.0 if available, else None
-    raw_output: str                 # for audit, especially for LLMs
+    lang_code: str  # ISO-639-3, e.g. "eng", "kab" (or "und")
+    confidence: float | None # 0.0-1.0 if available, else None
+    raw_output: str # for audit
 
 
 @runtime_checkable
