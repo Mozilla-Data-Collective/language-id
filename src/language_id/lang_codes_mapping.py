@@ -5,7 +5,10 @@ Everything normalizes to ISO-639-3 for comparison via `to_iso3`.
 
 `lang_codes_mapping.csv` is the table, keyed by ISO-639-3 (column `iso639_3`).
 Each row carries the `name`, the `iso639_1` 2-letter code (empty if none), and
-the canonical `bcp47` tag. It covers the CommonLID + CommonVoice language sets.
+the canonical `bcp47` tag. It only covers the CommonLID + CommonVoice language
+sets, it's not a fully comprehensive mapping. The `to_iso3` function also falls
+back to the `langcodes` library for tags not in the table (e.g. region subtags)
+and returns "und" if unresolvable.
 """
 
 
