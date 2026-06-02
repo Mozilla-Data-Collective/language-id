@@ -32,7 +32,7 @@ def save_run(
             plots/per_language_metrics.png
             plots/confusion_matrix.png
     """
-    timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_T%H%M%S")
     stem = f"{model}_{dataset.replace('/', '_')}_{timestamp}"
     run_dir = out_root / stem
     plots_dir = run_dir / "plots"
