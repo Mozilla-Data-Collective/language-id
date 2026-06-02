@@ -216,6 +216,7 @@ def finetune_llm(
     output_dir: str | Path | None = None,
     seed: int = 0,
     name: str | None = None,
+    show_progress: bool = True,
 ) -> HFTransformerLID:
     """Fine-tune a HF model with a classification head as a binary detector.
 
@@ -226,6 +227,10 @@ def finetune_llm(
 
     Requires the optional `finetune` extra (torch / transformers / datasets /
     accelerate); install it with `uv sync --extra finetune`.
+
+    `show_progress` prints percentage complete, elapsed time, and an ETA roughly
+    every 5% of training steps (in addition to the default tqdm bar), so a long
+    fine-tune reports how much is left.
     """
     try:
         import torch
@@ -235,6 +240,7 @@ def finetune_llm(
             AutoTokenizer,
             DataCollatorWithPadding,
             Trainer,
+            TrainerCallback,
             TrainingArguments,
         )
     except ImportError as e:
@@ -280,12 +286,53 @@ def finetune_llm(
         seed=seed,
         fp16=torch.cuda.is_available(),
     )
+
+    class _ProgressCallback(TrainerCallback):
+        """Print %-complete, elapsed, and ETA roughly every `every_frac` of steps."""
+
+        def __init__(self, every_frac: float = 0.05):
+            self.every_frac = every_frac
+            self._next = every_frac
+            self._start = 0.0
+
+        def on_train_begin(self, args, state, control, **kwargs):
+            import time
+
+            self._start = time.time()
+            self._next = self.every_frac
+            steps_per_epoch = state.max_steps // max(1, round(args.num_train_epochs))
+            print(
+                f"[finetune] {model_id}: {state.max_steps} steps "
+                f"({args.num_train_epochs:g} epochs x ~{steps_per_epoch} steps, "
+                f"batch size {args.per_device_train_batch_size}) on "
+                f"{'GPU' if torch.cuda.is_available() else 'CPU'}",
+                flush=True,
+            )
+
+        def on_step_end(self, args, state, control, **kwargs):
+            import time
+
+            if not state.max_steps:
+                return
+            frac = state.global_step / state.max_steps
+            if frac + 1e-9 < self._next and state.global_step != state.max_steps:
+                return
+            self._next = frac + self.every_frac
+            elapsed = time.time() - self._start
+            eta = (elapsed / frac - elapsed) if frac > 0 else 0.0
+            print(
+                f"[finetune] {frac:4.0%}  step {state.global_step}/{state.max_steps}  "
+                f"elapsed {elapsed / 60:5.1f}m  ETA {eta / 60:5.1f}m",
+                flush=True,
+            )
+
     trainer = Trainer(
         model=model,
         args=args,
         train_dataset=dataset,
         data_collator=DataCollatorWithPadding(tokenizer),
         processing_class=tokenizer,
+        callbacks=[_ProgressCallback()] if show_progress else None,
     )
     trainer.train()
 
