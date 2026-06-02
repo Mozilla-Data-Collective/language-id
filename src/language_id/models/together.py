@@ -11,6 +11,15 @@ SYSTEM_PROMPT = (
 )
 USER_TEMPLATE = "Text:\n{text}\n\nISO 639-3 code:"
 
+# Short name -> Together model ID
+TOGETHER_MODELS = {
+    "qwen": "Qwen/Qwen3.7-Max",
+    "gemma": "google/gemma-4-31B-it",
+    "gpt-oss-120b": "openai/gpt-oss-120b",
+    "gpt-oss-20b": "openai/gpt-oss-20b",
+    "deepseek": "deepseek-ai/deepseek-v4-pro",
+    "kimi": "moonshotai/kimi-k2.7",
+}
 
 class TogetherModel:
     """Together-hosted chat model used as an LID classifier.

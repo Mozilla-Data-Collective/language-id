@@ -5,16 +5,7 @@ Standard tools are langdetect / GlotLID / NLLB-LID.
 """
 
 from language_id.models.base import LIDModel, LIDPrediction
-
-# Short name -> Together model ID
-TOGETHER_MODELS = {
-    "qwen": "Qwen/Qwen3.7-Max",
-    "gemma": "google/gemma-4-31B-it",
-    "gpt-oss-120b": "openai/gpt-oss-120b",
-    "gpt-oss-20b": "openai/gpt-oss-20b",
-    "deepseek": "deepseek-ai/deepseek-v4-pro",
-    "kimi": "moonshotai/kimi-k2.7",
-}
+from language_id.models.together import TOGETHER_MODELS
 
 STANDARD_MODELS = ("langdetect", "glotlid", "nllb-lid")
 
