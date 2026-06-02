@@ -33,6 +33,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Fine-tune an off-the-shelf HF LLM (e.g. Qwen) as a single-language detector.
+finetune = [
+    "torch>=2.2",
+    "transformers>=4.51",
+    "datasets>=2.19",
+    "accelerate>=0.30",
+    "ipywidgets>=8.1",  # renders the training progress bar inside notebooks
+]
 dev = [
     "ruff>=0.6",
     "ty>=0.0.1a1",

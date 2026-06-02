@@ -4,7 +4,7 @@ Compare evaluation runs that were already saved under ``results/``.
 `save_run` writes one timestamped directory per evaluation:
 results/<model>_<dataset>_<timestamp>/
     metrics.json      overall scores + per-language metrics
-    per_language.csv  per-language support / accuracy / precision / f1
+    per_language.csv  per-language support / recall / precision / f1
     predictions.csv   every row with gold, pred, confidence
 
 This module reads those directories back so several models evaluated on the
@@ -13,7 +13,7 @@ won overall, and where each one wins or loses per language.
 
 Typical use (e.g. from a notebook)::
 
-    from language_id.compare import load_runs, overview_table, per_language_pivot
+    from language_id.compare_experiments import load_runs, overview_table, per_language_pivot
 
     runs = load_runs(["glotlid_commonlid_...", "langdetect_commonlid_...", "nllb-lid_commonlid_..."])
     overview_table(runs)              # one row per model, sorted by macro-F1

@@ -58,7 +58,7 @@ class OtariModel:
         temperature: float = 0.0,
         # Output-token ceiling. Reasoning models (e.g. gpt-oss) also spend tokens
         # here on hidden reasoning, so too small a cap leaves no room for the code.
-        max_tokens: int = 512,
+        max_output_tokens: int = 512,
         timeout_s: int = 120,
         max_retries: int = 3,
         examples: list[tuple[str, str]] | None = None,
@@ -66,7 +66,7 @@ class OtariModel:
         self.model_id = model_id
         self.name = name or model_id
         self.temperature = temperature
-        self.max_tokens = max_tokens
+        self.max_output_tokens = max_output_tokens
         self.timeout_s = timeout_s
         self.max_retries = max_retries
         self.examples = examples or []
@@ -96,7 +96,7 @@ class OtariModel:
             model=f"{PROVIDER_PREFIX}{self.model_id}",
             messages=self._messages(text),
             temperature=self.temperature,
-            max_tokens=self.max_tokens,
+            max_tokens=self.max_output_tokens,
         )
         return response.choices[0].message.content or ""
 
