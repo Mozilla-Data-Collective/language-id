@@ -26,7 +26,7 @@ def save_run(
 
         results/<model>_<dataset>_<timestamp>/
             predictions.csv      every row with gold, pred, confidence, raw_output
-            per_language.csv      per-language support / accuracy / precision / f1
+            per_language.csv      per-language support / recall / precision / f1
             metrics.json          overall results + per-language metrics
             plots/per_language_f1.png
             plots/per_language_metrics.png
@@ -109,14 +109,14 @@ def _plot_per_language_metrics(per_lang: pd.DataFrame, path: Path) -> None:
     height = max(3.0, 0.4 * len(df))
     fig, ax = plt.subplots(figsize=(9, height))
     bar_h = 0.27
-    ax.barh([i + bar_h for i in y], df["accuracy"], bar_h, label="accuracy", color="#55A868")
+    ax.barh([i + bar_h for i in y], df["recall"], bar_h, label="recall", color="#55A868")
     ax.barh(list(y), df["precision"], bar_h, label="precision", color="#C44E52")
     ax.barh([i - bar_h for i in y], df["f1"], bar_h, label="f1", color="#4C72B0")
     ax.set_yticks(list(y))
     ax.set_yticklabels(labels)
     ax.set_xlim(0, 1)
     ax.set_xlabel("score")
-    ax.set_title("Per-language accuracy / precision / F1")
+    ax.set_title("Per-language recall / precision / F1")
     ax.legend(loc="lower right")
     fig.tight_layout()
     fig.savefig(path, dpi=120)

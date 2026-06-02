@@ -15,7 +15,7 @@ def accuracy(gold: Sequence[str], pred: Sequence[str]) -> float:
 
 def per_language(gold: Sequence[str], pred: Sequence[str]) -> pd.DataFrame:
     """
-    Per-language metrics: support, accuracy (recall), precision, F1.
+    Per-language metrics: support, recall, precision, F1.
     Only languages present in the gold set are included.
     """
     df = pd.DataFrame({"gold": list(gold), "pred": list(pred)})
@@ -37,7 +37,7 @@ def per_language(gold: Sequence[str], pred: Sequence[str]) -> pd.DataFrame:
                 "lang": lang,
                 "name": language_name(lang),
                 "support": support,
-                "accuracy": recall,
+                "recall": recall,
                 "precision": precision,
                 "f1": f1,
             }
