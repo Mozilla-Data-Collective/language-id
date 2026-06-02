@@ -8,10 +8,13 @@ from language_id.data import (
     load_dataset_by_id,
     load_single_language_dataset,
     sample,
+    take_fewshot_examples,
 )
 from language_id.evaluate import evaluate
-from language_id.models import available_models, get_model
+from language_id.models import TOGETHER_MODELS, available_models, get_model
 from language_id.reporting import save_run
+
+MAX_SHOTS = 10
 
 app = typer.Typer(
     name="language-id",
@@ -42,6 +45,14 @@ def _load(
 def eval(
     model: str = typer.Option(..., "--model", "-m", help="Model name (see `language-id models`)."),
     n: int = typer.Option(0, "--n", help="Samples per language. Use 0 for the whole dataset."),
+    shot: int = typer.Option(
+        0,
+        "--shot",
+        min=0,
+        max=MAX_SHOTS,
+        help=f"Few-shot demonstrations to prepend to the LLM prompt (0-{MAX_SHOTS}). "
+        "0 is zero-shot. Only applies to LLMs; examples are held out from evaluation.",
+    ),
     dataset: str = typer.Option(
         "commonlid", "--dataset", help="'commonlid', 'commonvoice_lid', "
                                        "or a Mozilla Data Collective dataset ID."
@@ -71,8 +82,19 @@ def eval(
     ),
 ) -> None:
     """Evaluate `model` on the dataset. By default, samples `n` rows per language; `--n 0` uses every row."""
+    if shot > 0 and model not in TOGETHER_MODELS:
+        raise typer.BadParameter(f"--shot is only supported for LLMs, not {model!r}.")
+
     typer.echo(f"Loading dataset: {dataset}")
     df = _load(dataset, lang_col=lang_col, text_col=text_col, ground_truth_language=ground_truth_language)
+
+    # Hold out the few-shot demonstrations before sampling so they never leak
+    # into the evaluation set.
+    examples, df = take_fewshot_examples(df, shot, seed=seed)
+    if examples:
+        shown = ", ".join(code for _, code in examples)
+        typer.echo(f"Few-shot: {shot}-shot (example languages: {shown})")
+
     lang_list = [s.strip() for s in langs.split(",")] if langs else None
     if n > 0:
         df = sample(df, n_per_lang=n, langs=lang_list, seed=seed)
@@ -82,8 +104,12 @@ def eval(
             df = sample(df, n_per_lang=len(df), langs=lang_list, seed=seed)
         typer.echo(f"Using whole dataset: {len(df)} rows across {df['lang'].nunique()} languages.")
 
-    typer.echo(f"Evaluating model: {model}")
-    overall, per_lang, predictions = evaluate(df, get_model(model))
+    # Label few-shot runs distinctly so saved results compare cleanly (e.g. 0- vs 2-shot).
+    label = f"{model}-{shot}shot" if shot else model
+    model_obj = get_model(model, examples=examples or None)
+    model_obj.name = label
+    typer.echo(f"Evaluating model: {label}")
+    overall, per_lang, predictions = evaluate(df, model_obj)
 
     typer.echo("")
     typer.echo(f"  accuracy  : {overall['accuracy']:.4f}")
@@ -95,7 +121,7 @@ def eval(
     if save:
         out_dir = _REPO_ROOT / "results"
         out_dir.mkdir(parents=True, exist_ok=True)
-        run_dir = save_run(out_dir, model, dataset, overall, per_lang, predictions)
+        run_dir = save_run(out_dir, label, dataset, overall, per_lang, predictions)
         typer.echo(f"\nSaved predictions, metrics, and graphs to {run_dir}")
 
 

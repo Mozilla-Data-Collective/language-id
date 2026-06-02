@@ -13,12 +13,13 @@ USER_TEMPLATE = "Text:\n{text}\n\nISO 639-3 code:"
 
 # Short name -> Together model ID
 TOGETHER_MODELS = {
-    "qwen": "Qwen/Qwen3.7-Max",
-    "gemma": "google/gemma-4-31B-it",
-    "gpt-oss-120b": "openai/gpt-oss-120b",
-    "gpt-oss-20b": "openai/gpt-oss-20b",
-    "deepseek": "deepseek-ai/deepseek-v4-pro",
-    "kimi": "moonshotai/kimi-k2.7",
+
+    "deepseek": "deepseek-ai/deepseek-v4-pro",  #1.6T parameters (49B activated)
+    "qwen": "Qwen/Qwen3.7-Max",  # Closed source / 1T
+    "minimax-m27": "MiniMaxAI/MiniMax-M2.7",  # 230b, 10b activated
+    "gpt-oss-120b": "openai/gpt-oss-120b",  #120b
+    "gemma": "google/gemma-4-31B-it",  #32b
+    "gpt-oss-20b": "openai/gpt-oss-20b", #20b
 }
 
 class TogetherModel:
@@ -42,6 +43,7 @@ class TogetherModel:
         timeout_s: int = 120,
         max_retries: int = 3,
         stream: bool = True,
+        examples: list[tuple[str, str]] | None = None,
     ) -> None:
         self.model_id = model_id
         self.name = name or model_id
@@ -50,6 +52,8 @@ class TogetherModel:
         self.timeout_s = timeout_s
         self.max_retries = max_retries
         self.stream = stream
+        # (text, iso639-3) demonstration pairs for few-shot prompting.
+        self.examples = examples or []
         self._client: Any | None = None
 
     def _get_client(self) -> Any:
@@ -61,12 +65,16 @@ class TogetherModel:
 
     def _raw_call(self, text: str) -> str:
         client = self._get_client()
+        # System prompt, then any few-shot demonstrations as user/assistant turns,
+        # then the text to classify.
+        messages: list[dict[str, str]] = [{"role": "system", "content": SYSTEM_PROMPT}]
+        for ex_text, ex_code in self.examples:
+            messages.append({"role": "user", "content": USER_TEMPLATE.format(text=ex_text)})
+            messages.append({"role": "assistant", "content": ex_code})
+        messages.append({"role": "user", "content": USER_TEMPLATE.format(text=text)})
         kwargs: dict[str, Any] = dict(
             model=self.model_id,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": USER_TEMPLATE.format(text=text)},
-            ],
+            messages=messages,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
             timeout=self.timeout_s,

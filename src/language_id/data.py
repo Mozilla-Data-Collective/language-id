@@ -71,6 +71,44 @@ def load_single_language_dataset(
     return df
 
 
+def take_fewshot_examples(
+    df: pd.DataFrame, shot: int, seed: int = 0
+) -> tuple[list[tuple[str, str]], pd.DataFrame]:
+    """Pick `shot` demonstration rows for few-shot LLM prompting.
+
+    Examples span distinct languages where possible (better task coverage), are
+    chosen deterministically from `seed`, and are removed from the returned
+    DataFrame so they never leak into the evaluation set.
+
+    Returns `(examples, remaining)` where `examples` is a list of
+    `(text, lang_iso3)` pairs and `remaining` is `df` with those rows dropped.
+    """
+    if shot <= 0:
+        return [], df
+    shuffled = df.sample(frac=1.0, random_state=seed)
+    picked: list[int] = []
+    seen: set[str] = set()
+    # Prefer one example per distinct language for variety.
+    for idx, lang in shuffled[LANG_COLUMN_NAME].items():
+        if len(picked) >= shot:
+            break
+        if lang not in seen:
+            picked.append(idx)
+            seen.add(lang)
+    # Top up with any remaining rows when there aren't enough languages.
+    if len(picked) < shot:
+        for idx in shuffled.index:
+            if len(picked) >= shot:
+                break
+            if idx not in picked:
+                picked.append(idx)
+    examples = [
+        (str(df.at[i, TEXT_COLUMN_NAME]), str(df.at[i, LANG_COLUMN_NAME])) for i in picked
+    ]
+    remaining = df.drop(index=picked).reset_index(drop=True)
+    return examples, remaining
+
+
 def sample(
     df: pd.DataFrame,
     n_per_lang: int,

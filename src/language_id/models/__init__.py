@@ -10,12 +10,18 @@ from language_id.models.together import TOGETHER_MODELS
 STANDARD_MODELS = ("langdetect", "glotlid", "nllb-lid")
 
 
-def get_model(name: str) -> LIDModel:
-    """Instantiate a model by short name."""
+def get_model(name: str, examples: list[tuple[str, str]] | None = None) -> LIDModel:
+    """Instantiate a model by short name.
+
+    `examples` are (text, iso639-3) pairs for few-shot prompting. Only LLMs
+    use them (standard tools ignore them).
+    """
     if name in TOGETHER_MODELS:
         from language_id.models.together import TogetherModel
 
-        return TogetherModel(model_id=TOGETHER_MODELS[name], name=name)
+        return TogetherModel(model_id=TOGETHER_MODELS[name], name=name, examples=examples)
+    if examples:
+        raise ValueError(f"few-shot examples are only supported for LLMs, not {name!r}.")
     if name == "langdetect":
         from language_id.models.langdetect import LangdetectModel
 
