@@ -13,13 +13,13 @@ USER_TEMPLATE = "Text:\n{text}\n\nISO 639-3 code:"
 
 # Short name -> Together model ID
 TOGETHER_MODELS = {
-
-    "deepseek": "deepseek-ai/deepseek-v4-pro",  #1.6T parameters (49B activated)
-    "qwen": "Qwen/Qwen3.7-Max",  # Closed source / 1T
-    "minimax-m27": "MiniMaxAI/MiniMax-M2.7",  # 230b, 10b activated
+    # "deepseek": "deepseek-ai/deepseek-v4-pro",  #1.6T parameters (49B activated) - reasoning
+    # "minimax-m27": "MiniMaxAI/MiniMax-M2.7",  # 230b, 10b activated
+    "qwen": "Qwen/Qwen3.7-Max",  # Closed source / 1T - reasoning
     "gpt-oss-120b": "openai/gpt-oss-120b",  #120b
     "gemma": "google/gemma-4-31B-it",  #32b
     "gpt-oss-20b": "openai/gpt-oss-20b", #20b
+    "llama": "meta-llama/Meta-Llama-3-8B-Instruct-Lite",  # 8b
 }
 
 class TogetherModel:
@@ -39,7 +39,7 @@ class TogetherModel:
         # emitting the answer; a small cap leaves no room for the code itself.
         # Non-reasoning models stop right after the short code, so this is a
         # ceiling, not a cost.
-        max_tokens: int = 512,
+        max_tokens: int = 256,
         timeout_s: int = 120,
         max_retries: int = 3,
         stream: bool = True,
