@@ -35,6 +35,8 @@ dev = [
     "pre-commit>=3.7",
     "mkdocs>=1.6",
     "mkdocs-material>=9.5",
+    "nbconvert>=7.17.1",
+    "ipykernel>=7.2.0",
 ]
 
 [project.scripts]
