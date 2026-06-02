@@ -13,6 +13,13 @@ from language_id.data import (
 from language_id.evaluate import evaluate
 from language_id.models import TOGETHER_MODELS, available_models, get_model
 from language_id.reporting import save_run
+from language_id.train import (
+    DEFAULT_HF_MODEL_ID,
+    build_training_data,
+    evaluate_detector,
+    finetune_llm,
+    train_logreg,
+)
 
 MAX_SHOTS = 10
 
@@ -123,6 +130,70 @@ def eval(
         out_dir.mkdir(parents=True, exist_ok=True)
         run_dir = save_run(out_dir, label, dataset, overall, per_lang, predictions)
         typer.echo(f"\nSaved predictions, metrics, and graphs to {run_dir}")
+
+
+@app.command()
+def train(
+    dataset: str = typer.Option(
+        ..., "--dataset", help="Single-language dataset ID/slug (a .tar.gz text corpus)."
+    ),
+    lang: str = typer.Option(
+        ..., "--lang", help="Target language of every row (any code/name form, e.g. 'lad')."
+    ),
+    method: str = typer.Option(
+        "logreg", "--method", help="'logreg' (char n-gram logistic regression) or 'llm' (fine-tune a HF model)."
+    ),
+    hf_model_id: str = typer.Option(
+        DEFAULT_HF_MODEL_ID,
+        "--hf-model-id",
+        help="Hugging Face model id to fine-tune (only used with --method llm).",
+    ),
+    epochs: float = typer.Option(3, "--epochs", help="Fine-tuning epochs (LLM only)."),
+    batch_size: int = typer.Option(8, "--batch-size", help="Fine-tuning batch size (LLM only)."),
+    n_train: int = typer.Option(
+        0, "--n-train", help="Cap on target-language training samples. 0 uses every positive row."
+    ),
+    n_neg: int = typer.Option(
+        0, "--n-neg", help="Common Voice LID training negatives. 0 matches the number of positives."
+    ),
+    seed: int = typer.Option(0, "--seed", help="Sampling/training seed."),
+) -> None:
+    """Train a single-language detector and report its detection scores on a held-out test split.
+
+    Builds a binary problem (target language vs. Common Voice LID negatives) and fits either a
+    char n-gram logistic regression (`--method logreg`) or a fine-tuned HF model
+    (`--method llm --hf-model-id ...`, needs the `finetune` extra).
+    """
+    if method not in {"logreg", "llm"}:
+        raise typer.BadParameter("--method must be 'logreg' or 'llm'.")
+
+    typer.echo(f"Building training data from {dataset} (target language: {lang}) ...")
+    train_df, test_df = build_training_data(
+        dataset, lang, n_train=n_train or None, n_neg=n_neg or None, seed=seed
+    )
+    n_pos_train = int((train_df["label"] != "other").sum())
+    typer.echo(
+        f"  train: {len(train_df)} rows ({n_pos_train} {lang} / {len(train_df) - n_pos_train} other)"
+        f"  |  test: {len(test_df)} rows"
+    )
+
+    if method == "logreg":
+        typer.echo("Training char n-gram logistic regression ...")
+        model = train_logreg(train_df)
+    else:
+        typer.echo(f"Fine-tuning Hugging Face model: {hf_model_id} ...")
+        model = finetune_llm(
+            train_df, lang, model_id=hf_model_id, epochs=epochs, batch_size=batch_size, seed=seed
+        )
+
+    scores = evaluate_detector(model, test_df, lang)
+    typer.echo("")
+    typer.echo(f"  model     : {scores['model']}")
+    typer.echo(f"  precision : {scores['precision']:.4f}")
+    typer.echo(f"  recall    : {scores['recall']:.4f}")
+    typer.echo(f"  f1        : {scores['f1']:.4f}")
+    typer.echo(f"  accuracy  : {scores['accuracy']:.4f}")
+    typer.echo(f"  n (test)  : {scores['n']}")
 
 
 @app.command()
