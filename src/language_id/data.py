@@ -1,5 +1,8 @@
+import tarfile
+from pathlib import Path
+
 import pandas as pd
-from datacollective import load_dataset
+from datacollective import download_dataset, load_dataset
 
 from language_id.lang_codes_mapping import to_iso3
 
@@ -69,6 +72,42 @@ def load_single_language_dataset(
     df = df.rename(columns={text_col_name: TEXT_COLUMN_NAME})
     df[LANG_COLUMN_NAME] = to_iso3(ground_truth_language)
     return df
+
+
+def load_single_language_text_archive(
+    dataset_id: str,
+    ground_truth_language: str,
+    download_directory: str | None = None,
+) -> pd.DataFrame:
+    """Load a single-language corpus distributed as a `.tar.gz` of `.txt` files.
+
+    Some datasets can't be read with `load_dataset` (for example, they consist of
+    a single raw text archive rather than a tabular file). This downloads the archive, extracts
+    it, and reads every `.txt` file with one sentence per line into a DataFrame
+    with `sentence` and `lang` columns (the language is the same for every row,
+    normalized to ISO-639-3).
+
+    Clone/extend this function as you wish to add support for datasets with different formats
+
+    Args:
+        dataset_id: The valid Mozilla Data Collective dataset ID or slug.
+        ground_truth_language: The language of every row, in any code/name form.
+        download_directory: Where to save the archive (defaults to the SDK's path).
+    """
+    archive_path = download_dataset(dataset_id, download_directory=download_directory)
+    extract_dir = Path(str(archive_path).removesuffix(".tar.gz"))
+    with tarfile.open(archive_path, "r:gz") as tar:
+        tar.extractall(extract_dir)
+
+    lines: list[str] = []
+    for txt in sorted(extract_dir.rglob("*.txt")):
+        lines.extend(txt.read_text(encoding="utf-8").splitlines())
+
+    df = pd.DataFrame({TEXT_COLUMN_NAME: lines})
+    df[LANG_COLUMN_NAME] = to_iso3(ground_truth_language)
+    df = df.dropna(subset=[TEXT_COLUMN_NAME])
+    df[TEXT_COLUMN_NAME] = df[TEXT_COLUMN_NAME].map(str)
+    return df[df[TEXT_COLUMN_NAME].str.strip() != ""].reset_index(drop=True)
 
 
 def take_fewshot_examples(
