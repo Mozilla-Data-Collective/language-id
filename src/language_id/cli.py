@@ -6,6 +6,7 @@ from language_id.data import (
     load_commonlid,
     load_commonvoice_lid,
     load_dataset_by_id,
+    load_single_language_dataset,
     sample,
 )
 from language_id.evaluate import evaluate
@@ -22,11 +23,18 @@ app = typer.Typer(
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
-def _load(dataset: str, lang_col: str = "tag", text_col: str = "sentence"):
+def _load(
+    dataset: str,
+    lang_col: str = "tag",
+    text_col: str = "sentence",
+    ground_truth_language: str | None = None,
+):
     if dataset == "commonlid":
         return load_commonlid()
     if dataset == "commonvoice_lid":
         return load_commonvoice_lid(split="test")
+    if ground_truth_language is not None:
+        return load_single_language_dataset(dataset, ground_truth_language, text_col_name=text_col)
     return load_dataset_by_id(dataset, lang_col_name=lang_col, text_col_name=text_col)
 
 
@@ -47,6 +55,12 @@ def eval(
         "--text-col",
         help="Text column name in a custom dataset ID (ignored for the built-in datasets).",
     ),
+    ground_truth_language: str | None = typer.Option(
+        None,
+        "--ground-truth-language",
+        help="Treat the dataset as single-language: every row's gold label is this "
+        "language (any code/name form). The dataset only needs a text column; --lang-col is ignored.",
+    ),
     langs: str | None = typer.Option(
         None, "--langs", help="Comma-separated languages to restrict to (codes or names)."
     ),
@@ -57,7 +71,7 @@ def eval(
 ) -> None:
     """Evaluate `model` on the dataset. By default, samples `n` rows per language; `--n 0` uses every row."""
     typer.echo(f"Loading dataset: {dataset}")
-    df = _load(dataset, lang_col=lang_col, text_col=text_col)
+    df = _load(dataset, lang_col=lang_col, text_col=text_col, ground_truth_language=ground_truth_language)
     lang_list = [s.strip() for s in langs.split(",")] if langs else None
     if n > 0:
         df = sample(df, n_per_lang=n, langs=lang_list, seed=seed)

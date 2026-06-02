@@ -49,6 +49,28 @@ def load_dataset_by_id(dataset_id: str, lang_col_name: str = "tag", text_col_nam
     return df
 
 
+def load_single_language_dataset(
+    dataset_id: str,
+    ground_truth_language: str,
+    text_col_name: str = "sentence",
+) -> pd.DataFrame:
+    """Load a single-language dataset whose every row shares one known language.
+
+    Use this when the dataset has only a text column and no per-row language
+    label: the gold `lang` is supplied once and applied to every row.
+
+    Args:
+        dataset_id: The valid Mozilla Data Collective dataset ID or slug.
+        ground_truth_language: The language of every row, in any code/name form
+            (normalized to ISO-639-3).
+        text_col_name: The name of the text column (the sentences to identify).
+    """
+    df = load_dataset(dataset_id)
+    df = df.rename(columns={text_col_name: TEXT_COLUMN_NAME})
+    df[LANG_COLUMN_NAME] = to_iso3(ground_truth_language)
+    return df
+
+
 def sample(
     df: pd.DataFrame,
     n_per_lang: int,
