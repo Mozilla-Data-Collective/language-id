@@ -41,25 +41,26 @@ def _load(
 @app.command()
 def eval(
     model: str = typer.Option(..., "--model", "-m", help="Model name (see `language-id models`)."),
-    n: int = typer.Option(10, "--n", help="Samples per language. Use 0 for the whole dataset."),
+    n: int = typer.Option(0, "--n", help="Samples per language. Use 0 for the whole dataset."),
     dataset: str = typer.Option(
-        "commonlid", "--dataset", help="'commonlid', 'commonvoice_lid', or a datacollective ID."
+        "commonlid", "--dataset", help="'commonlid', 'commonvoice_lid', "
+                                       "or a Mozilla Data Collective dataset ID."
     ),
     lang_col: str = typer.Option(
         "tag",
         "--lang-col",
-        help="Language column name in a custom dataset ID (ignored for the built-in datasets).",
+        help="Language column name in a custom dataset ID.",
     ),
     text_col: str = typer.Option(
         "sentence",
         "--text-col",
-        help="Text column name in a custom dataset ID (ignored for the built-in datasets).",
+        help="Text column name in a custom dataset ID.",
     ),
     ground_truth_language: str | None = typer.Option(
         None,
         "--ground-truth-language",
         help="Treat the dataset as single-language: every row's gold label is this "
-        "language (any code/name form). The dataset only needs a text column; --lang-col is ignored.",
+        "language (any code/name form). The dataset only needs a text column and --lang-col is ignored.",
     ),
     langs: str | None = typer.Option(
         None, "--langs", help="Comma-separated languages to restrict to (codes or names)."
