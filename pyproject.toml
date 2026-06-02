@@ -39,6 +39,7 @@ finetune = [
     "transformers>=4.51",
     "datasets>=2.19",
     "accelerate>=0.30",
+    "ipywidgets>=8.1",  # renders the training progress bar inside notebooks
 ]
 dev = [
     "ruff>=0.6",
