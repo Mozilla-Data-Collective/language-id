@@ -34,7 +34,11 @@ class TogetherModel:
         *,
         name: str | None = None,
         temperature: float = 0.0,
-        max_tokens: int = 16,
+        # Reasoning models (e.g. gpt-oss) spend tokens on hidden reasoning before
+        # emitting the answer; a small cap leaves no room for the code itself.
+        # Non-reasoning models stop right after the short code, so this is a
+        # ceiling, not a cost.
+        max_tokens: int = 512,
         timeout_s: int = 120,
         max_retries: int = 3,
         stream: bool = True,
@@ -68,10 +72,13 @@ class TogetherModel:
             timeout=self.timeout_s,
         )
         if self.stream:
-            parts = [
-                chunk.choices[0].delta.content or ""
-                for chunk in client.chat.completions.create(stream=True, **kwargs)
-            ]
+            parts = []
+            for chunk in client.chat.completions.create(stream=True, **kwargs):
+                # Some chunks (e.g. the final usage/keepalive chunk) carry no
+                # choices; skip anything without a content delta.
+                if not chunk.choices:
+                    continue
+                parts.append(chunk.choices[0].delta.content or "")
             return "".join(parts)
         response = client.chat.completions.create(**kwargs)
         return response.choices[0].message.content or ""
