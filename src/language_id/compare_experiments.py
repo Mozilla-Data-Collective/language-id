@@ -204,25 +204,76 @@ def plot_overview(runs: list[Run], ax: plt.Axes | None = None) -> plt.Axes:
     return ax
 
 
+def _heatmap_figsize(n_langs: int, n_models: int, lang_axis: str) -> tuple[float, float]:
+    """Figure size scaled to the grid, with languages along ``lang_axis``."""
+    lang_extent = max(4.0, 0.32 * n_langs)
+    model_extent = max(3.0, 0.45 * n_models)
+    return (model_extent, lang_extent) if lang_axis == "y" else (lang_extent, model_extent)
+
+
+def _draw_heatmap_panel(
+    hm: pd.DataFrame, metric: str, ax: plt.Axes, title: str, lang_axis: str = "y"
+) -> None:
+    """Draw one heatmap panel on ``ax``.
+
+    ``hm`` must have languages on the rows ((name, code) tuples) and models on
+    the columns; ``lang_axis="x"`` draws its transpose.
+    """
+    lang_labels = [f"{name} ({code})" for name, code in hm.index]
+    model_labels = list(hm.columns)
+    values = hm.values
+    if lang_axis == "x":
+        values = values.T
+        x_labels, y_labels = lang_labels, model_labels
+        lang_ticks = ax.xaxis
+    else:
+        x_labels, y_labels = model_labels, lang_labels
+        lang_ticks = ax.yaxis
+
+    im = ax.imshow(values, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
+    ax.set_xticks(range(len(x_labels)), x_labels, rotation=90)
+    ax.set_yticks(range(len(y_labels)), y_labels)
+    lang_ticks.set_tick_params(labelsize=7)
+    ax.set_title(title)
+    ax.figure.colorbar(im, ax=ax, fraction=0.046, pad=0.04, label=metric)
+
+
 def plot_per_language_heatmap(
-    runs: list[Run], metric: str = "f1", ax: plt.Axes | None = None
-) -> plt.Axes:
-    """Heatmap of per-language ``metric`` (languages x models)."""
+    runs: list[Run],
+    metric: str = "f1",
+    ax: plt.Axes | None = None,
+    langs_per_fig: int | None = None,
+    lang_axis: str = "y",
+) -> plt.Axes | list[plt.Axes]:
+    """Heatmap of per-language ``metric``.
+
+    ``lang_axis`` selects which axis holds the languages: ``"y"`` (default)
+    puts languages on the rows and models on the columns, ``"x"`` the
+    transpose. With ``langs_per_fig`` set, the languages are split into
+    chunks of that size, one figure is drawn per chunk and a list of axes
+    is returned.
+    """
+    if lang_axis not in ("x", "y"):
+        raise ValueError("lang_axis must be 'x' or 'y'.")
     pivot = per_language_pivot(runs, metric)
     model_cols = [c for c in pivot.columns if c != "support"]
-    hm = pivot[model_cols]
-    if ax is None:
-        _, ax = plt.subplots(
-            figsize=(max(4.0, 1.6 * len(model_cols)), max(4.0, 0.28 * len(hm)))
-        )
-    im = ax.imshow(hm.values, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
-    ax.set_xticks(range(len(model_cols)))
-    ax.set_xticklabels(model_cols, rotation=45, ha="right")
-    ax.set_yticks(range(len(hm)))
-    ax.set_yticklabels([f"{n} ({code})" for n, code in hm.index], fontsize=7)
-    ax.set_title(f"Per-language {metric}")
-    ax.figure.colorbar(im, ax=ax, fraction=0.046, pad=0.04, label=metric)
-    return ax
+    hm = pivot[model_cols]  # languages on the rows; transposed at draw time
+    n_langs = len(hm)
+
+    if langs_per_fig is None:
+        if ax is None:
+            _, ax = plt.subplots(figsize=_heatmap_figsize(n_langs, len(model_cols), lang_axis))
+        _draw_heatmap_panel(hm, metric, ax, f"Per-language {metric}", lang_axis)
+        return ax
+
+    axes = []
+    for start in range(0, n_langs, langs_per_fig):
+        chunk = hm.iloc[start : start + langs_per_fig]
+        _, cax = plt.subplots(figsize=_heatmap_figsize(len(chunk), len(model_cols), lang_axis))
+        title = f"Per-language {metric} ({start + 1}-{start + len(chunk)} of {n_langs})"
+        _draw_heatmap_panel(chunk, metric, cax, title, lang_axis)
+        axes.append(cax)
+    return axes
 
 
 def plot_disagreement(
