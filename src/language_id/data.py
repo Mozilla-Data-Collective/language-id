@@ -155,6 +155,7 @@ def sample(
 ) -> pd.DataFrame:
     """Return up to `n_per_lang` rows per language (optionally filtered to `langs`).
 
+    `n_per_lang=-1` keeps all rows per language.
     `langs` may be given in any code/name form; they're normalized to ISO-639-3.
 
     Example usage:
@@ -165,10 +166,16 @@ def sample(
     if langs is not None:
         wanted = {to_iso3(lang) for lang in langs}
         df = df[df["lang"].isin(wanted)]
-    parts = [
-        g.sample(n=min(n_per_lang, len(g)), random_state=seed)
-        for _, g in df.groupby("lang", sort=False)
-    ]
-    if not parts:
-        return df.iloc[0:0].reset_index(drop=True)
+
+    if df.empty:
+        return df.reset_index(drop=True)
+
+    keep_all_rows = True if n_per_lang == -1 else False
+    parts = []
+    for _, lang_rows in df.groupby("lang", sort=False):
+        if keep_all_rows:
+            parts.append(lang_rows)
+        else:
+            n = min(n_per_lang, len(lang_rows))
+            parts.append(lang_rows.sample(n=n, random_state=seed))
     return pd.concat(parts).reset_index(drop=True)
