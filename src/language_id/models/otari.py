@@ -4,6 +4,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 from otari import OtariClient
+from tqdm import tqdm
 
 from language_id.models.base import LIDPrediction
 from language_id.models.together import SYSTEM_PROMPT, USER_TEMPLATE, _parse
@@ -91,4 +92,4 @@ class OtariModel:
         return LIDPrediction(lang_code=_parse(raw), confidence=None, raw_output=raw)
 
     def predict_batch(self, texts: list[str]) -> list[LIDPrediction]:
-        return [self.predict(t) for t in texts]
+        return [self.predict(t) for t in tqdm(texts, desc=self.name, unit="text")]

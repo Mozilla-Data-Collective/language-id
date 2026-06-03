@@ -2,6 +2,8 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
+from tqdm import tqdm
+
 from language_id.lang_codes_mapping import to_iso3
 from language_id.models.base import LIDPrediction
 
@@ -97,11 +99,12 @@ class TogetherModel:
 
     def predict_batch(self, texts: list[str]) -> list[LIDPrediction]:
         if self.max_workers <= 1 or len(texts) <= 1:
-            return [self.predict(t) for t in texts]
+            return [self.predict(t) for t in tqdm(texts, desc=self.name, unit="text")]
         # One shared client, created up front so the workers don't race to init it.
         self._get_client()
         with ThreadPoolExecutor(max_workers=self.max_workers) as pool:
-            return list(pool.map(self.predict, texts))  # map preserves input order
+            # map preserves input order
+            return list(tqdm(pool.map(self.predict, texts), total=len(texts), desc=self.name, unit="text"))
 
 
 def _parse(raw: str) -> str:
