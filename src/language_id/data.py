@@ -74,18 +74,17 @@ def load_single_language_dataset(
     return df
 
 
-def load_single_language_text_archive(
+def download_and_load_single_language_text_dataset(
     dataset_id: str,
     ground_truth_language: str,
     download_directory: str | None = None,
 ) -> pd.DataFrame:
-    """Load a single-language corpus distributed as a `.tar.gz` of `.txt` files.
+    """Download and load a single-language corpus from Mozilla Data Collective.
 
-    Some datasets can't be read with `load_dataset` (for example, they consist of
-    a single raw text archive rather than a tabular file). This downloads the archive, extracts
-    it, and reads every `.txt` file with one sentence per line into a DataFrame
-    with `sentence` and `lang` columns (the language is the same for every row,
-    normalized to ISO-639-3).
+    Some datasets can't be used with `load_dataset` as of today.
+    This function downloads the archive, extracts it, and reads every `.txt` file
+    with one sentence per line into a DataFrame with `sentence` and `lang` columns
+    (the language is the same for every row, normalized to ISO-639-3).
 
     Clone/extend this function as you wish to add support for datasets with different formats
 

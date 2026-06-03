@@ -25,7 +25,7 @@ from language_id.data import (
     LANG_COLUMN_NAME,
     TEXT_COLUMN_NAME,
     load_commonvoice_lid,
-    load_single_language_text_archive,
+    download_and_load_single_language_text_dataset,
 )
 from language_id.lang_codes_mapping import to_iso3
 from language_id.models.base import LIDModel, LIDPrediction
@@ -132,7 +132,7 @@ def build_training_data(
     """
     target_lang = to_iso3(target_lang)
 
-    pos = load_single_language_text_archive(
+    pos = download_and_load_single_language_text_dataset(
         target_dataset, target_lang, download_directory=download_directory
     )
     # The corpus has no split column, so create a train/test split ourselves.
