@@ -15,7 +15,7 @@ USER_TEMPLATE = "Text:\n{text}\n\nISO 639-3 code:"
 # Short name -> Together model ID.
 TOGETHER_MODELS = {
     # "deepseek": "deepseek-ai/deepseek-v4-pro",  # 1.6T params (49B activated) - reasoning
-    # "minimax-m27": "MiniMaxAI/MiniMax-M2.7",  # 230b, 10b activated
+    "minimax-m27": "MiniMaxAI/MiniMax-M2.7",  # 230b, 10b activated
     # "qwen": "Qwen/Qwen3.7-Max",  # closed source / 1T - reasoning
     "gpt-oss-120b": "openai/gpt-oss-120b",  # 120b
     "gemma": "google/gemma-4-31B-it",  # 32b
