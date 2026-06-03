@@ -8,10 +8,21 @@ from otari import OtariClient
 from language_id.models.base import LIDPrediction
 from language_id.models.together import SYSTEM_PROMPT, USER_TEMPLATE, _parse
 
+"""
+NOTE: Right now this client is not used for LLM inference. Its placed here for future
+migration as otari allows for LLM inference from both local models (e.g. ollama) and 
+a broad list of different providers (TogetherAI, OpenAI, Anthropic, Mistral, etc).
+
+If you do not have a TogetherAI API key, you can simply start with a local LLM using Ollama
+through the Otari client.
+"""
+
+
 PROVIDER_PREFIX = "together:"  # Otari routes these ids to the Together provider
 
 class OtariModel:
     """A chat LLM used as an LID classifier, served via the Otari gateway.
+    Can be used as a drop-in replacement for a TogetherAI client.
 
     Authenticates with `OTARI_PLATFORM_TOKEN`. Few-shot `examples` are
     (text, iso639-3) pairs prepended to the prompt as user/assistant turns.
