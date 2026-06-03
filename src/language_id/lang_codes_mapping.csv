@@ -1,349 +1,349 @@
 name,iso639_3,iso639_1,bcp47,commonlid,commonvoicelid
-Bankon,abb,,abb,False,True
-Abkhazian,abk,ab,ab,False,True
-Acehnese,ace,,ace,True,False
-Saint Lucian Creole French,acf,,acf,True,False
-Adyghe,ady,,ady,False,True
-Tunisian Arabic,aeb,,aeb,True,False
-Afrikaans,afr,af,af,True,True
-Aja (Benin),ajg,,ajg,False,True
-Gheg Albanian,aln,,aln,False,True
-Amharic,amh,am,am,True,True
-Sudanese Arabic,apd,,apd,True,False
-Arabic,ara,ar,ar,True,True
-Standard Arabic,arb,,arb,True,False
-Aragonese,arg,an,an,True,True
-Najdi Arabic,ars,,ars,True,False
-Moroccan Arabic,ary,,ary,True,False
-Egyptian Arabic,arz,,arz,True,False
-Assamese,asm,as,as,True,True
-Asturian,ast,,ast,False,True
-Azerbaijani,aze,az,az,True,True
-North Azerbaijani,azj,,azj,True,False
-Tuki,bag,,bag,False,True
-Bashkir,bak,ba,ba,True,True
-Basaa,bas,,bas,False,True
-Bamun,bax,,bax,False,True
-Baatonum,bba,,bba,False,True
-Ghomala,bbj,,bbj,False,True
-Bats,bbl,,bbl,False,True
-Bamenyam,bce,,bce,False,True
-Baoulé,bci,,bci,False,True
-Central Bikol,bcl,,bcl,True,False
-Bebele,beb,,beb,False,True
-Belarusian,bel,be,be,False,True
-Bangla,ben,bn,bn,True,True
-Betawi,bew,,bew,False,True
-Bafut,bfd,,bfd,False,True
-Balti,bft,,bft,False,True
-Eastern Balochi,bgp,,bgp,False,True
-Bikol,bik,,bik,True,False
-Bakoko,bkh,,bkh,False,True
-Kom,bkm,,bkm,False,True
-Batanga,bnm,,bnm,False,True
-Bunun,bnn,,bnn,False,True
-Breton,bre,br,br,True,True
-Brahui,brh,,brh,False,True
-Mokpwe,bri,,bri,False,True
-Kati,bsh,,bsh,False,True
-Burushaski,bsk,,bsk,False,True
-Bateri,btv,,btv,False,True
-Bulgarian,bul,bg,bg,True,True
-Bulu,bum,,bum,False,True
-Bukusu,bxk,,bxk,False,True
-Medumba,byv,,byv,False,True
-Catalan,cat,ca,ca,True,True
-Czech,ces,cs,cs,True,True
-Chiga,cgg,,cgg,False,True
-Chuvash,chv,cv,cv,False,True
-Chokwe,cjk,,cjk,False,True
-Central Kurdish,ckb,,ckb,False,True
-Mandarin Chinese,cmn,,cmn,True,False
-Hakha Chin,cnh,,cnh,False,True
-Cornish,cor,kw,kw,False,True
-South Ucayali Ashéninka,cpy,,cpy,False,True
-Crimean Tatar,crh,,crh,True,False
-Teutila Cuicatec,cut,,cut,False,True
-Tepeuxila Cuicatec,cux,,cux,False,True
-Welsh,cym,cy,cy,False,True
-Dagbani,dag,,dag,False,True
-Danish,dan,da,da,False,True
-Dargwa,dar,,dar,False,True
-Taita,dav,,dav,False,True
-German,deu,de,de,True,True
-Divehi,div,dv,dv,False,True
-Domaaki,dmk,,dmk,False,True
-Dameli,dml,,dml,False,True
-Rukai,dru,,dru,False,True
-Duala,dua,,dua,False,True
-Dyula,dyu,,dyu,False,True
-Ebrié,ebr,,ebr,False,True
-Koti,eko,,eko,False,True
-Greek,ell,el,el,True,True
-English,eng,en,en,True,True
-Esperanto,epo,eo,eo,False,True
-Estonian,est,et,et,True,True
-Central Yupik,esu,,esu,False,True
-Eton (Cameroon),eto,,eto,False,True
-Basque,eus,eu,eu,False,True
-Ewondo,ewo,,ewo,False,True
-Extremaduran,ext,,ext,True,False
-Fang,fan,,fan,False,True
-Persian,fas,fa,fa,True,True
-Filipino,fil,,fil,True,False
-Finnish,fin,fi,fi,True,True
-Fe'fe',fmp,,fmp,False,True
-French,fra,fr,fr,True,True
-Old French,fro,,fro,True,False
-Western Frisian,fry,fy,fy,True,True
-Adamawa Fulfulde,fub,,fub,False,True
-Borgu Fulfulde,fue,,fue,False,True
-Nigerian Fulfulde,fuv,,fuv,True,False
-West Central Oromo,gaz,,gaz,True,False
-Guadeloupean Creole French,gcf,,gcf,True,False
-Guianese Creole French,gcr,,gcr,True,False
-Gen,gej,,gej,False,True
-Gurgula,ggg,,ggg,False,True
-Gidar,gid,,gid,False,True
-Goaria,gig,,gig,False,True
-South Giziga,giz,,giz,False,True
-Kachi Koli,gjk,,gjk,False,True
-Gujari,gju,,gju,False,True
-Scottish Gaelic,gla,gd,gd,True,False
-Irish,gle,ga,ga,True,True
-Galician,glg,gl,gl,False,True
-Manx,glv,gv,gv,False,True
-Goan Konkani,gom,,gom,True,False
-Ancient Greek,grc,,grc,True,False
-Guarani,grn,gn,gn,False,True
-Paraguayan Guaraní,gug,,gug,True,False
-Gujarati,guj,gu,gu,True,False
-Gun,guw,,guw,True,False
-Gawri,gwc,,gwc,False,True
-Gawar-Bati,gwt,,gwt,False,True
-Northwest Gbaya,gya,,gya,False,True
-Haitian Creole,hat,ht,ht,False,True
-Hausa,hau,ha,ha,True,True
-Hazaragi,haz,,haz,False,True
-Ancient Hebrew,hbo,,hbo,True,False
-Huichol,hch,,hch,False,True
-Hebrew,heb,he,he,True,True
-Hemba,hem,,hem,False,True
-Hindi,hin,hi,hi,True,True
-Northern Hindko,hno,,hno,False,True
-Upper Sorbian,hsb,,hsb,False,True
-Hungarian,hun,hu,hu,False,True
-Nüpode Huitoto,hux,,hux,False,True
-Armenian,hye,hy,hy,False,True
-Ibibio,ibb,,ibb,False,True
-Igbo,ibo,ig,ig,True,True
-Interlingua,ina,ia,ia,False,True
-Indonesian,ind,id,id,True,True
-Inupiaq,ipk,ik,ik,False,True
-Icelandic,isl,is,is,False,True
-Italian,ita,it,it,True,True
-Javanese,jav,jv,jv,True,False
-Ngomba,jgo,,jgo,False,True
-Japanese,jpn,ja,ja,True,True
-Jaqaru,jqr,,jqr,False,True
-Kabyle,kab,,kab,True,True
-Kannada,kan,kn,kn,True,False
-Georgian,kat,ka,ka,False,True
-Kazakh,kaz,kk,kk,False,True
-Kabardian,kbd,,kbd,False,True
-Nubi,kcn,,kcn,False,True
-Tem,kdh,,kdh,False,True
-Khowar,khw,,khw,False,True
-Kikuyu,kik,ki,ki,True,False
-Kinyarwanda,kin,rw,rw,False,True
-Kyrgyz,kir,ky,ky,False,True
-Kalenjin,kln,,kln,False,True
-Kalasha,kls,,kls,False,True
-Northern Kurdish,kmr,,kmr,False,True
-Konzo,koo,,koo,False,True
-Korean,kor,ko,ko,True,True
-Bafia,ksf,,ksf,False,True
-Parkari Koli,kvx,,kvx,False,True
-Wadiyara Koli,kxp,,kxp,False,True
-Lao,lao,lo,lo,False,True
-Latin,lat,la,la,True,False
-Latvian,lav,lv,lv,True,True
-Lendu,led,,led,False,True
-Ligurian,lij,,lij,True,True
-Lingala,lin,ln,ln,True,False
-Lithuanian,lit,lt,lt,False,True
-Kenyi,lke,,lke,False,True
-Loarki,lrk,,lrk,False,True
-Lasi,lss,,lss,False,True
-Latgalian,ltg,,ltg,True,True
-Thur,lth,,lth,False,True
-Luba-Lulua,lua,,lua,False,True
-Ganda,lug,lg,lg,True,True
-Luo (Kenya and Tanzania),luo,,luo,False,True
-Standard Latvian,lvs,,lvs,True,False
-Malayalam,mal,ml,ml,True,True
-Marathi,mar,mr,mr,True,True
-Huautla Mazatec,mau,,mau,False,True
-Mbo (Cameroon),mbo,,mbo,False,True
-Matsés,mcf,,mcf,False,True
-Masana,mcn,,mcn,False,True
-Mpiemo,mcx,,mcx,False,True
-Mbum,mdd,,mdd,False,True
-Moksha,mdf,,mdf,False,True
-Southwestern Tlaxiaco Mixtec,meh,,meh,False,True
-Mpumpong,mgg,,mgg,False,True
-Mungaka,mhk,,mhk,False,True
-Eastern Mari,mhr,,mhr,False,True
-Macedonian,mkd,mk,mk,False,True
-Dhatki,mki,,mki,False,True
-Malagasy,mlg,mg,mg,True,False
-Maltese,mlt,mt,mt,False,True
-Michoacán Mazahua,mmc,,mmc,False,True
-Mongolian,mon,mn,mn,False,True
-Western Mari,mrj,,mrj,False,True
-Malay,msa,ms,ms,True,True
-Musey,mse,,mse,False,True
-Mundang,mua,,mua,False,True
-Musgu,mug,,mug,False,True
-Marwari (Pakistan),mve,,mve,False,True
-Indus Kohistani,mvy,,mvy,False,True
-Mada (Cameroon),mxu,,mxu,False,True
-Erzya,myv,,myv,False,True
-Min Nan Chinese,nan,,nan,False,True
-South Ndebele,nbl,nr,nr,False,True
-Central Puebla Nahuatl,ncx,,ncx,False,True
-Nepali,nep,ne,ne,False,True
-Zacatlán-Ahuacatlán-Tepetzintla Nahuatl,nhi,,nhi,False,True
-Ngombale,nla,,nla,False,True
-Dutch,nld,nl,nl,True,True
-Orizaba Nahuatl,nlv,,nlv,False,True
-Kwasio,nmg,,nmg,False,True
-Nawdm,nmz,,nmz,False,True
-Ngiemboon,nnh,,nnh,False,True
-Norwegian Nynorsk,nno,nn,nn,False,True
-Norwegian Bokmål,nob,nb,nb,False,True
-Northern Sotho,nso,,nso,True,True
-Nyankole,nyn,,nyn,True,False
-Nyungwe,nyu,,nyu,False,True
-Occitan,oci,oc,oc,True,True
-Od,odk,,odk,False,True
-Odia,ori,or,or,False,True
-Oromo,orm,om,om,True,False
-Ormuri,oru,,oru,False,True
-Odia (individual language),ory,,ory,True,False
-Ossetic,oss,os,os,False,True
-Punjabi,pan,pa,pa,True,True
-Nigerian Pidgin,pcm,,pcm,True,True
-Phalura,phl,,phl,False,True
-Pahari-Potwari,phr,,phr,False,True
-Kohistani Shina,plk,,plk,False,True
-Western Penan,pne,,pne,False,True
-Polish,pol,pl,pl,True,True
-Portuguese,por,pt,pt,True,True
-Ashéninka Perené,prq,,prq,False,True
-Western Highland Purepecha,pua,,pua,False,True
-Pashto,pus,ps,ps,False,True
-Paiwan,pwn,,pwn,False,True
-Southern Pastaza Quechua,qup,,qup,False,True
-Yanahuanca Pasco Quechua,qur,,qur,False,True
-Santiago del Estero Quichua,qus,,qus,False,True
-Yauyos Quechua,qux,,qux,False,True
-Ayacucho Quechua,quy,,quy,False,True
-Ambo-Pasco Quechua,qva,,qva,False,True
-Imbabura Highland Quichua,qvi,,qvi,False,True
-Loja Highland Quichua,qvj,,qvj,False,True
-Cajatambo North Lima Quechua,qvl,,qvl,False,True
-Corongo Ancash Quechua,qwa,,qwa,False,True
-Sihuas Ancash Quechua,qws,,qws,False,True
-Chiquián Ancash Quechua,qxa,,qxa,False,True
-Puno Quechua,qxp,,qxp,False,True
-Santa Ana de Tusi Pasco Quechua,qxt,,qxt,False,True
-Arequipa-La Unión Quechua,qxu,,qxu,False,True
-Jauja Wanca Quechua,qxw,,qxw,False,True
-Réunion Creole French,rcf,,rcf,True,False
-Rombo,rof,,rof,False,True
-Romansh,roh,rm,rm,False,True
-Romanian,ron,ro,ro,False,True
-Ruuli,ruc,,ruc,False,True
-Aromanian,rup,,rup,False,True
-Russian,rus,ru,ru,True,True
-Amba (Uganda),rwm,,rwm,False,True
-Yakut,sah,,sah,False,True
-Sanskrit,san,sa,sa,True,False
-Santali,sat,,sat,False,True
-Sindhi Bhil,sbn,,sbn,False,True
-Shina,scl,,scl,False,True
-Scots,sco,,sco,False,True
-Seri,sei,,sei,False,True
-Saraiki,skr,,skr,False,True
-Slovak,slk,sk,sk,False,True
-Slovenian,slv,sl,sl,False,True
-Shona,sna,sn,sn,True,False
-Sindhi,snd,sd,sd,False,True
-Southern Sotho,sot,st,st,True,True
-Spanish,spa,es,es,True,True
-Albanian,sqi,sq,sq,False,True
-Sardinian,srd,sc,sc,False,True
-Serbian,srp,sr,sr,False,True
-Sansi,ssi,,ssi,False,True
-Swati,ssw,ss,ss,False,True
-Svan,sva,,sva,False,True
-Swahili,swa,sw,sw,True,True
-Swedish,swe,sv,sv,False,True
-Swahili (individual language),swh,,swh,True,False
-Sakizaya,szy,,szy,False,True
-Tamil,tam,ta,ta,True,True
-Central Tarahumara,tar,,tar,False,True
-Tatar,tat,tt,tt,True,True
-Atayal,tay,,tay,False,True
-Telugu,tel,te,te,True,True
-Tajik,tgk,tg,tg,False,True
-Thai,tha,th,th,True,True
-Tigre,tig,,tig,False,True
-Tigrinya,tir,ti,ti,False,True
-Tlingit,tli,,tli,False,True
-Toba,tob,,tob,False,True
-Toki Pona,tok,,tok,False,True
-Papantla Totonac,top,,top,False,True
-Taroko,trv,,trv,False,True
-Torwali,trw,,trw,False,True
-Tswana,tsn,tn,tn,False,True
-Tsonga,tso,ts,ts,False,True
-Tooro,ttj,,ttj,False,True
-Tupuri,tui,,tui,False,True
-Turkmen,tuk,tk,tk,True,True
-Turkish,tur,tr,tr,True,True
-Tunen,tvu,,tvu,False,True
-Twi,twi,tw,tw,False,True
-Wuzlam,udl,,udl,False,True
-Uyghur,uig,ug,ug,False,True
-Ukrainian,ukr,uk,uk,True,True
-Kuku,ukv,,ukv,False,True
-Urdu,urd,ur,ur,True,True
-Ushojo,ush,,ush,False,True
-Uzbek,uzb,uz,uz,True,True
-Southern Uzbek,uzs,,uzs,True,False
-Huarijio,var,,var,False,True
-Venetian,vec,,vec,True,False
-Venda,ven,ve,ve,False,True
-Vietnamese,vie,vi,vi,True,True
-Votic,vot,,vot,False,True
-Wakhi,wbl,,wbl,False,True
-Cameroon Pidgin,wes,,wes,False,True
-Wu Chinese,wuu,,wuu,True,False
-Khetrani,xhe,,xhe,False,True
-Xhosa,xho,xh,xh,True,True
-Kalkoti,xka,,xka,False,True
-Mingrelian,xmf,,xmf,False,True
-Yaqui,yaq,,yaq,False,True
-Yangben,yav,,yav,False,True
-Yidgha,ydg,,ydg,False,True
-Yiddish,yid,yi,yi,False,True
-Yoruba,yor,yo,yo,True,True
-Cantonese,yue,,yue,True,True
-Standard Moroccan Tamazight,zgh,,zgh,False,True
-Chinese,zho,zh,zh,True,True
-Copainalá Zoque,zoc,,zoc,False,True
-Standard Malay,zsm,,zsm,True,False
-Zulu,zul,zu,zu,True,True
-Zaza,zza,,zza,False,True
+Bankon,abb,,abb,0,996
+Abkhazian,abk,ab,ab,0,1046778
+Acehnese,ace,,ace,1,0
+Saint Lucian Creole French,acf,,acf,603,0
+Adyghe,ady,,ady,0,9370
+Tunisian Arabic,aeb,,aeb,15,0
+Afrikaans,afr,af,af,88,4794
+Aja (Benin),ajg,,ajg,0,3213
+Gheg Albanian,aln,,aln,0,1509
+Amharic,amh,am,am,1617,2208
+Sudanese Arabic,apd,,apd,27,0
+Arabic,ara,ar,ar,16306,59433
+Standard Arabic,arb,,arb,26152,0
+Aragonese,arg,an,an,2342,10454
+Najdi Arabic,ars,,ars,229,0
+Moroccan Arabic,ary,,ary,226,0
+Egyptian Arabic,arz,,arz,1102,0
+Assamese,asm,as,as,213,7171
+Asturian,ast,,ast,0,1642
+Azerbaijani,aze,az,az,29,93161
+North Azerbaijani,azj,,azj,847,0
+Tuki,bag,,bag,0,1006
+Bashkir,bak,ba,ba,46,153968
+Basaa,bas,,bas,0,5226
+Bamun,bax,,bax,0,1030
+Baatonum,bba,,bba,0,971
+Ghomala,bbj,,bbj,0,996
+Bats,bbl,,bbl,0,1661
+Bamenyam,bce,,bce,0,986
+Baoulé,bci,,bci,0,876
+Central Bikol,bcl,,bcl,270,0
+Bebele,beb,,beb,0,1005
+Belarusian,bel,be,be,0,379544
+Bangla,ben,bn,bn,1886,562827
+Betawi,bew,,bew,0,1338
+Bafut,bfd,,bfd,0,766
+Balti,bft,,bft,0,7967
+Eastern Balochi,bgp,,bgp,0,6996
+Bikol,bik,,bik,1499,0
+Bakoko,bkh,,bkh,0,986
+Kom,bkm,,bkm,0,940
+Batanga,bnm,,bnm,0,1025
+Bunun,bnn,,bnn,0,3167
+Breton,bre,br,br,2348,20706
+Brahui,brh,,brh,0,3095
+Mokpwe,bri,,bri,0,1200
+Kati,bsh,,bsh,0,2646
+Burushaski,bsk,,bsk,0,2447
+Bateri,btv,,btv,0,1053
+Bulgarian,bul,bg,bg,109,39572
+Bulu,bum,,bum,0,901
+Bukusu,bxk,,bxk,0,2059
+Medumba,byv,,byv,0,990
+Catalan,cat,ca,ca,93,1302198
+Czech,ces,cs,cs,933,451137
+Chiga,cgg,,cgg,0,2735
+Chuvash,chv,cv,cv,0,4382
+Chokwe,cjk,,cjk,0,1141
+Central Kurdish,ckb,,ckb,0,19064
+Mandarin Chinese,cmn,,cmn,865,0
+Hakha Chin,cnh,,cnh,0,5218
+Cornish,cor,kw,kw,0,9609
+South Ucayali Ashéninka,cpy,,cpy,0,1000
+Crimean Tatar,crh,,crh,405,0
+Teutila Cuicatec,cut,,cut,0,994
+Tepeuxila Cuicatec,cux,,cux,0,2251
+Welsh,cym,cy,cy,0,118044
+Dagbani,dag,,dag,0,5002
+Danish,dan,da,da,0,20807
+Dargwa,dar,,dar,0,2025
+Taita,dav,,dav,0,11773
+German,deu,de,de,7553,2055937
+Divehi,div,dv,dv,0,7173
+Domaaki,dmk,,dmk,0,4138
+Dameli,dml,,dml,0,5669
+Rukai,dru,,dru,0,3867
+Duala,dua,,dua,0,1003
+Dyula,dyu,,dyu,0,5028
+Ebrié,ebr,,ebr,0,872
+Koti,eko,,eko,0,1288
+Greek,ell,el,el,7,8162
+English,eng,en,en,27461,1678069
+Esperanto,epo,eo,eo,0,181098
+Estonian,est,et,et,659,11035
+Central Yupik,esu,,esu,0,6929
+Eton (Cameroon),eto,,eto,0,966
+Basque,eus,eu,eu,0,1012805
+Ewondo,ewo,,ewo,0,883
+Extremaduran,ext,,ext,7,0
+Fang,fan,,fan,0,1005
+Persian,fas,fa,fa,19318,57493
+Filipino,fil,,fil,2281,0
+Finnish,fin,fi,fi,1030,5848
+Fe'fe',fmp,,fmp,0,1004
+French,fra,fr,fr,3233,1647211
+Old French,fro,,fro,39,0
+Western Frisian,fry,fy,fy,965,10902
+Adamawa Fulfulde,fub,,fub,0,1067
+Borgu Fulfulde,fue,,fue,0,988
+Nigerian Fulfulde,fuv,,fuv,37,0
+West Central Oromo,gaz,,gaz,11,0
+Guadeloupean Creole French,gcf,,gcf,24,0
+Guianese Creole French,gcr,,gcr,111,0
+Gen,gej,,gej,0,3188
+Gurgula,ggg,,ggg,0,2005
+Gidar,gid,,gid,0,917
+Goaria,gig,,gig,0,2005
+South Giziga,giz,,giz,0,991
+Kachi Koli,gjk,,gjk,0,2004
+Gujari,gju,,gju,0,3852
+Scottish Gaelic,gla,gd,gd,929,0
+Irish,gle,ga,ga,1,4435
+Galician,glg,gl,gl,0,696197
+Manx,glv,gv,gv,0,4219
+Goan Konkani,gom,,gom,338,0
+Ancient Greek,grc,,grc,1,0
+Guarani,grn,gn,gn,0,5894
+Paraguayan Guaraní,gug,,gug,548,0
+Gujarati,guj,gu,gu,948,0
+Gun,guw,,guw,4,0
+Gawri,gwc,,gwc,0,5574
+Gawar-Bati,gwt,,gwt,0,3719
+Northwest Gbaya,gya,,gya,0,1054
+Haitian Creole,hat,ht,ht,0,76
+Hausa,hau,ha,ha,16455,5448
+Hazaragi,haz,,haz,0,1360
+Ancient Hebrew,hbo,,hbo,808,0
+Huichol,hch,,hch,0,1549
+Hebrew,heb,he,he,5055,4172
+Hemba,hem,,hem,0,1020
+Hindi,hin,hi,hi,3666,32167
+Northern Hindko,hno,,hno,0,2349
+Upper Sorbian,hsb,,hsb,0,7180
+Hungarian,hun,hu,hu,0,326314
+Nüpode Huitoto,hux,,hux,0,995
+Armenian,hye,hy,hy,0,237397
+Ibibio,ibb,,ibb,0,1031
+Igbo,ibo,ig,ig,168,14459
+Interlingua,ina,ia,ia,0,9069
+Indonesian,ind,id,id,33828,13318
+Inupiaq,ipk,ik,ik,0,4386
+Icelandic,isl,is,is,0,5083
+Italian,ita,it,it,4387,924954
+Javanese,jav,jv,jv,1656,0
+Ngomba,jgo,,jgo,0,1035
+Japanese,jpn,ja,ja,3344,35562
+Jaqaru,jqr,,jqr,0,999
+Kabyle,kab,,kab,116,182785
+Kannada,kan,kn,kn,2554,0
+Georgian,kat,ka,ka,0,132575
+Kazakh,kaz,kk,kk,0,6205
+Kabardian,kbd,,kbd,0,20914
+Nubi,kcn,,kcn,0,1885
+Tem,kdh,,kdh,0,1219
+Khowar,khw,,khw,0,7046
+Kikuyu,kik,ki,ki,62,0
+Kinyarwanda,kin,rw,rw,0,1404758
+Kyrgyz,kir,ky,ky,0,5042
+Kalenjin,kln,,kln,0,29899
+Kalasha,kls,,kls,0,3911
+Northern Kurdish,kmr,,kmr,0,16987
+Konzo,koo,,koo,0,2194
+Korean,kor,ko,ko,8,7352
+Bafia,ksf,,ksf,0,1004
+Parkari Koli,kvx,,kvx,0,2025
+Wadiyara Koli,kxp,,kxp,0,2079
+Lao,lao,lo,lo,0,5145
+Latin,lat,la,la,50,0
+Latvian,lav,lv,lv,512,34338
+Lendu,led,,led,0,1952
+Ligurian,lij,,lij,147,6078
+Lingala,lin,ln,ln,55,0
+Lithuanian,lit,lt,lt,0,129304
+Kenyi,lke,,lke,0,2298
+Loarki,lrk,,lrk,0,2005
+Lasi,lss,,lss,0,2029
+Latgalian,ltg,,ltg,38,14996
+Thur,lth,,lth,0,1895
+Luba-Lulua,lua,,lua,0,880
+Ganda,lug,lg,lg,1361,191401
+Luo (Kenya and Tanzania),luo,,luo,0,24677
+Standard Latvian,lvs,,lvs,353,0
+Malayalam,mal,ml,ml,2061,5487
+Marathi,mar,mr,mr,1061,6715
+Huautla Mazatec,mau,,mau,0,1119
+Mbo (Cameroon),mbo,,mbo,0,998
+Matsés,mcf,,mcf,0,997
+Masana,mcn,,mcn,0,959
+Mpiemo,mcx,,mcx,0,903
+Mbum,mdd,,mdd,0,923
+Moksha,mdf,,mdf,0,6039
+Southwestern Tlaxiaco Mixtec,meh,,meh,0,1041
+Mpumpong,mgg,,mgg,0,991
+Mungaka,mhk,,mhk,0,1000
+Eastern Mari,mhr,,mhr,0,328269
+Macedonian,mkd,mk,mk,0,6032
+Dhatki,mki,,mki,0,2055
+Malagasy,mlg,mg,mg,2153,0
+Maltese,mlt,mt,mt,0,5273
+Michoacán Mazahua,mmc,,mmc,0,876
+Mongolian,mon,mn,mn,0,6094
+Western Mari,mrj,,mrj,0,54143
+Malay,msa,ms,ms,28224,257
+Musey,mse,,mse,0,1002
+Mundang,mua,,mua,0,995
+Musgu,mug,,mug,0,1002
+Marwari (Pakistan),mve,,mve,0,2003
+Indus Kohistani,mvy,,mvy,0,6634
+Mada (Cameroon),mxu,,mxu,0,959
+Erzya,myv,,myv,0,5066
+Min Nan Chinese,nan,,nan,0,26736
+South Ndebele,nbl,nr,nr,0,319
+Central Puebla Nahuatl,ncx,,ncx,0,1518
+Nepali,nep,ne,ne,0,1316
+Zacatlán-Ahuacatlán-Tepetzintla Nahuatl,nhi,,nhi,0,757
+Ngombale,nla,,nla,0,984
+Dutch,nld,nl,nl,3299,260502
+Orizaba Nahuatl,nlv,,nlv,0,1006
+Kwasio,nmg,,nmg,0,1025
+Nawdm,nmz,,nmz,0,2446
+Ngiemboon,nnh,,nnh,0,886
+Norwegian Nynorsk,nno,nn,nn,0,5318
+Norwegian Bokmål,nob,nb,nb,0,4371
+Northern Sotho,nso,,nso,99,2244
+Nyankole,nyn,,nyn,5,0
+Nyungwe,nyu,,nyu,0,1271
+Occitan,oci,oc,oc,1314,4934
+Od,odk,,odk,0,2047
+Odia,ori,or,or,0,6187
+Oromo,orm,om,om,1060,0
+Ormuri,oru,,oru,0,7354
+Odia (individual language),ory,,ory,608,0
+Ossetic,oss,os,os,0,1888
+Punjabi,pan,pa,pa,1020,14825
+Nigerian Pidgin,pcm,,pcm,2,987
+Phalura,phl,,phl,0,4744
+Pahari-Potwari,phr,,phr,0,2077
+Kohistani Shina,plk,,plk,0,4657
+Western Penan,pne,,pne,0,2628
+Polish,pol,pl,pl,1,230004
+Portuguese,por,pt,pt,2443,43507
+Ashéninka Perené,prq,,prq,0,986
+Western Highland Purepecha,pua,,pua,0,2201
+Pashto,pus,ps,ps,0,25105
+Paiwan,pwn,,pwn,0,2207
+Southern Pastaza Quechua,qup,,qup,0,991
+Yanahuanca Pasco Quechua,qur,,qur,0,1010
+Santiago del Estero Quichua,qus,,qus,0,998
+Yauyos Quechua,qux,,qux,0,978
+Ayacucho Quechua,quy,,quy,0,759
+Ambo-Pasco Quechua,qva,,qva,0,1000
+Imbabura Highland Quichua,qvi,,qvi,0,1149
+Loja Highland Quichua,qvj,,qvj,0,1059
+Cajatambo North Lima Quechua,qvl,,qvl,0,1000
+Corongo Ancash Quechua,qwa,,qwa,0,1000
+Sihuas Ancash Quechua,qws,,qws,0,998
+Chiquián Ancash Quechua,qxa,,qxa,0,999
+Puno Quechua,qxp,,qxp,0,2065
+Santa Ana de Tusi Pasco Quechua,qxt,,qxt,0,998
+Arequipa-La Unión Quechua,qxu,,qxu,0,998
+Jauja Wanca Quechua,qxw,,qxw,0,1001
+Réunion Creole French,rcf,,rcf,401,0
+Rombo,rof,,rof,0,1399
+Romansh,roh,rm,rm,0,14693
+Romanian,ron,ro,ro,0,13753
+Ruuli,ruc,,ruc,0,1662
+Aromanian,rup,,rup,0,3507
+Russian,rus,ru,ru,4003,47828
+Amba (Uganda),rwm,,rwm,0,1857
+Yakut,sah,,sah,0,6075
+Sanskrit,san,sa,sa,895,0
+Santali,sat,,sat,0,5421
+Sindhi Bhil,sbn,,sbn,0,2000
+Shina,scl,,scl,0,3299
+Scots,sco,,sco,0,680
+Seri,sei,,sei,0,1615
+Saraiki,skr,,skr,0,6011
+Slovak,slk,sk,sk,0,20266
+Slovenian,slv,sl,sl,0,4205
+Shona,sna,sn,sn,1355,0
+Sindhi,snd,sd,sd,0,13345
+Southern Sotho,sot,st,st,943,2339
+Spanish,spa,es,es,4236,1082097
+Albanian,sqi,sq,sq,0,49983
+Sardinian,srd,sc,sc,0,5472
+Serbian,srp,sr,sr,0,7897
+Sansi,ssi,,ssi,0,2007
+Swati,ssw,ss,ss,0,1614
+Svan,sva,,sva,0,1538
+Swahili,swa,sw,sw,4031,134013
+Swedish,swe,sv,sv,0,26229
+Swahili (individual language),swh,,swh,12383,0
+Sakizaya,szy,,szy,0,801
+Tamil,tam,ta,ta,81,118253
+Central Tarahumara,tar,,tar,0,1258
+Tatar,tat,tt,tt,1029,18033
+Atayal,tay,,tay,0,3790
+Telugu,tel,te,te,11747,330
+Tajik,tgk,tg,tg,0,3846
+Thai,tha,th,th,3118,64463
+Tigre,tig,,tig,0,5416
+Tigrinya,tir,ti,ti,0,4570
+Tlingit,tli,,tli,0,7863
+Toba,tob,,tob,0,1578
+Toki Pona,tok,,tok,0,7497
+Papantla Totonac,top,,top,0,391
+Taroko,trv,,trv,0,1974
+Torwali,trw,,trw,0,7769
+Tswana,tsn,tn,tn,0,1765
+Tsonga,tso,ts,ts,0,352
+Tooro,ttj,,ttj,0,1882
+Tupuri,tui,,tui,0,1971
+Turkmen,tuk,tk,tk,22,2494
+Turkish,tur,tr,tr,4486,409859
+Tunen,tvu,,tvu,0,1943
+Twi,twi,tw,tw,0,49159
+Wuzlam,udl,,udl,0,1011
+Uyghur,uig,ug,ug,0,230174
+Ukrainian,ukr,uk,uk,2,212656
+Kuku,ukv,,ukv,0,2217
+Urdu,urd,ur,ur,204,21697
+Ushojo,ush,,ush,0,1169
+Uzbek,uzb,uz,uz,43189,148729
+Southern Uzbek,uzs,,uzs,9,0
+Huarijio,var,,var,0,1977
+Venetian,vec,,vec,1558,0
+Venda,ven,ve,ve,0,1735
+Vietnamese,vie,vi,vi,21803,6481
+Votic,vot,,vot,0,5437
+Wakhi,wbl,,wbl,0,5493
+Cameroon Pidgin,wes,,wes,0,999
+Wu Chinese,wuu,,wuu,631,0
+Khetrani,xhe,,xhe,0,5039
+Xhosa,xho,xh,xh,575,1476
+Kalkoti,xka,,xka,0,1979
+Mingrelian,xmf,,xmf,0,1004
+Yaqui,yaq,,yaq,0,2838
+Yangben,yav,,yav,0,1013
+Yidgha,ydg,,ydg,0,1882
+Yiddish,yid,yi,yi,0,1548
+Yoruba,yor,yo,yo,2290,5419
+Cantonese,yue,,yue,425,18545
+Standard Moroccan Tamazight,zgh,,zgh,0,2734
+Chinese,zho,zh,zh,11738,99916
+Copainalá Zoque,zoc,,zoc,0,1481
+Standard Malay,zsm,,zsm,343,0
+Zulu,zul,zu,zu,4,1320
+Zaza,zza,,zza,0,5647
