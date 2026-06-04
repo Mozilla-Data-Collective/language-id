@@ -6,6 +6,8 @@ with other-language sentences from Common Voice LID (negatives), then fits one
 of two specialists:
 
 - `train_logreg`: TF-IDF character n-grams + logistic regression (CPU, fast).
+- `train_naive_bayes`: hashed character n-grams + multinomial naive Bayes
+  (CPU, fast, constant memory).
 - `finetune_llm`: fine-tune any Hugging Face model with a sequence-
   classification head (e.g. `Qwen/Qwen3-0.6B`). Swap `model_id` to try another
   base model — nothing else changes. Needs the optional `finetune` extra.
@@ -16,16 +18,17 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import HashingVectorizer, TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
 from language_id.data import (
     LANG_COLUMN_NAME,
     TEXT_COLUMN_NAME,
     load_commonvoice_lid,
-    load_single_language_text_archive,
+    download_and_load_single_language_text_dataset,
 )
 from language_id.lang_codes_mapping import to_iso3
 from language_id.models.base import LIDModel, LIDPrediction
@@ -37,7 +40,7 @@ DEFAULT_HF_MODEL_ID = "Qwen/Qwen3-0.6B"
 
 
 class CharNgramLID:
-    """A trained char n-gram + logistic-regression pipeline as a LID model.
+    """A trained char n-gram sklearn pipeline (logreg or naive Bayes) as a LID model.
 
     Predicts the target ISO-639-3 code or `OTHER_LABEL`, with the classifier's
     max class probability as confidence.
@@ -132,7 +135,7 @@ def build_training_data(
     """
     target_lang = to_iso3(target_lang)
 
-    pos = load_single_language_text_archive(
+    pos = download_and_load_single_language_text_dataset(
         target_dataset, target_lang, download_directory=download_directory
     )
     # The corpus has no split column, so create a train/test split ourselves.
@@ -198,6 +201,44 @@ def train_logreg(
         [
             ("tfidf", TfidfVectorizer(analyzer=analyzer, ngram_range=ngram_range, min_df=min_df)),
             ("lr", LogisticRegression(max_iter=max_iter, class_weight="balanced")),
+        ]
+    )
+    clf.fit(train_df[TEXT_COLUMN_NAME], train_df["label"])
+    return CharNgramLID(clf, name=name)
+
+
+def train_naive_bayes(
+    train_df: pd.DataFrame,
+    *,
+    analyzer: str = "char_wb",
+    ngram_range: tuple[int, int] = (2, 4),
+    n_features: int = 2**18,
+    alpha: float = 0.01,
+    name: str = "charngram-nb",
+) -> CharNgramLID:
+    """Fit a hashed char n-gram + multinomial naive Bayes detector on `train_df`.
+
+    `train_df` must have `sentence` and `label` columns (see
+    `build_training_data`). Mirrors the local-LID notebook's setup: a
+    `HashingVectorizer` maps n-grams straight to a fixed number of feature
+    buckets (no vocabulary to store, constant memory) and feeds a
+    `MultinomialNB` with Laplace smoothing `alpha`. `alternate_sign=False` and
+    `norm=None` keep the counts non-negative and raw, as `MultinomialNB`
+    requires.
+    """
+    clf = Pipeline(
+        [
+            (
+                "hash",
+                HashingVectorizer(
+                    analyzer=analyzer,
+                    ngram_range=ngram_range,
+                    n_features=n_features,
+                    alternate_sign=False,
+                    norm=None,
+                ),
+            ),
+            ("nb", MultinomialNB(alpha=alpha)),
         ]
     )
     clf.fit(train_df[TEXT_COLUMN_NAME], train_df["label"])

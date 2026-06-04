@@ -1,4 +1,5 @@
 from langdetect import DetectorFactory, LangDetectException, detect_langs
+from tqdm import tqdm
 
 from language_id.lang_codes_mapping import to_iso3
 from language_id.models.base import LIDPrediction
@@ -28,4 +29,4 @@ class LangdetectModel:
         )
 
     def predict_batch(self, texts: list[str]) -> list[LIDPrediction]:
-        return [self.predict(t) for t in texts]
+        return [self.predict(t) for t in tqdm(texts, desc=self.name, unit="text")]

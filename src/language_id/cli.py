@@ -18,7 +18,7 @@ from language_id.train import (
     build_training_data,
     evaluate_detector,
     finetune_llm,
-    train_logreg,
+    train_logreg, train_naive_bayes,
 )
 
 MAX_SHOTS = 10
@@ -141,7 +141,7 @@ def train(
         ..., "--lang", help="Target language of every row (any code/name form, e.g. 'lad')."
     ),
     method: str = typer.Option(
-        "logreg", "--method", help="'logreg' (char n-gram logistic regression) or 'llm' (fine-tune a HF model)."
+        "naive_bayes", "--method", help="'naive_bayes' (char n-gram naive bayes), 'logreg' (char n-gram logistic regression) or 'llm' (fine-tune a HF model)."
     ),
     hf_model_id: str = typer.Option(
         DEFAULT_HF_MODEL_ID,
@@ -164,8 +164,8 @@ def train(
     char n-gram logistic regression (`--method logreg`) or a fine-tuned HF model
     (`--method llm --hf-model-id ...`, needs the `finetune` extra).
     """
-    if method not in {"logreg", "llm"}:
-        raise typer.BadParameter("--method must be 'logreg' or 'llm'.")
+    if method not in {"naive_bayes", "logreg", "llm"}:
+        raise typer.BadParameter("--method must be 'naive_bayes', 'logreg' or 'llm'.")
 
     typer.echo(f"Building training data from {dataset} (target language: {lang}) ...")
     train_df, test_df = build_training_data(
@@ -177,7 +177,10 @@ def train(
         f"  |  test: {len(test_df)} rows"
     )
 
-    if method == "logreg":
+    if method == "naive_bayes":
+        typer.echo("Training char n-gram Naive Bayes model ...")
+        model = train_naive_bayes(train_df)
+    elif method == "logreg":
         typer.echo("Training char n-gram logistic regression ...")
         model = train_logreg(train_df)
     else:

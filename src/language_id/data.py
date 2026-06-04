@@ -74,18 +74,17 @@ def load_single_language_dataset(
     return df
 
 
-def load_single_language_text_archive(
+def download_and_load_single_language_text_dataset(
     dataset_id: str,
     ground_truth_language: str,
     download_directory: str | None = None,
 ) -> pd.DataFrame:
-    """Load a single-language corpus distributed as a `.tar.gz` of `.txt` files.
+    """Download and load a single-language corpus from Mozilla Data Collective.
 
-    Some datasets can't be read with `load_dataset` (for example, they consist of
-    a single raw text archive rather than a tabular file). This downloads the archive, extracts
-    it, and reads every `.txt` file with one sentence per line into a DataFrame
-    with `sentence` and `lang` columns (the language is the same for every row,
-    normalized to ISO-639-3).
+    Some datasets can't be used with `load_dataset` as of today.
+    This function downloads the archive, extracts it, and reads every `.txt` file
+    with one sentence per line into a DataFrame with `sentence` and `lang` columns
+    (the language is the same for every row, normalized to ISO-639-3).
 
     Clone/extend this function as you wish to add support for datasets with different formats
 
@@ -156,6 +155,7 @@ def sample(
 ) -> pd.DataFrame:
     """Return up to `n_per_lang` rows per language (optionally filtered to `langs`).
 
+    `n_per_lang=-1` keeps all rows per language.
     `langs` may be given in any code/name form; they're normalized to ISO-639-3.
 
     Example usage:
@@ -166,10 +166,16 @@ def sample(
     if langs is not None:
         wanted = {to_iso3(lang) for lang in langs}
         df = df[df["lang"].isin(wanted)]
-    parts = [
-        g.sample(n=min(n_per_lang, len(g)), random_state=seed)
-        for _, g in df.groupby("lang", sort=False)
-    ]
-    if not parts:
-        return df.iloc[0:0].reset_index(drop=True)
+
+    if df.empty:
+        return df.reset_index(drop=True)
+
+    keep_all_rows = True if n_per_lang == -1 else False
+    parts = []
+    for _, lang_rows in df.groupby("lang", sort=False):
+        if keep_all_rows:
+            parts.append(lang_rows)
+        else:
+            n = min(n_per_lang, len(lang_rows))
+            parts.append(lang_rows.sample(n=n, random_state=seed))
     return pd.concat(parts).reset_index(drop=True)

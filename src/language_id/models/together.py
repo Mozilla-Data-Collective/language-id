@@ -2,6 +2,8 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
+from tqdm import tqdm
+
 from language_id.lang_codes_mapping import to_iso3
 from language_id.models.base import LIDPrediction
 
@@ -15,7 +17,7 @@ USER_TEMPLATE = "Text:\n{text}\n\nISO 639-3 code:"
 # Short name -> Together model ID.
 TOGETHER_MODELS = {
     # "deepseek": "deepseek-ai/deepseek-v4-pro",  # 1.6T params (49B activated) - reasoning
-    # "minimax-m27": "MiniMaxAI/MiniMax-M2.7",  # 230b, 10b activated
+    "minimax-m27": "MiniMaxAI/MiniMax-M2.7",  # 230b, 10b activated
     # "qwen": "Qwen/Qwen3.7-Max",  # closed source / 1T - reasoning
     "gpt-oss-120b": "openai/gpt-oss-120b",  # 120b
     "gemma": "google/gemma-4-31B-it",  # 32b
@@ -97,11 +99,12 @@ class TogetherModel:
 
     def predict_batch(self, texts: list[str]) -> list[LIDPrediction]:
         if self.max_workers <= 1 or len(texts) <= 1:
-            return [self.predict(t) for t in texts]
+            return [self.predict(t) for t in tqdm(texts, desc=self.name, unit="text")]
         # One shared client, created up front so the workers don't race to init it.
         self._get_client()
         with ThreadPoolExecutor(max_workers=self.max_workers) as pool:
-            return list(pool.map(self.predict, texts))  # map preserves input order
+            # map preserves input order
+            return list(tqdm(pool.map(self.predict, texts), total=len(texts), desc=self.name, unit="text"))
 
 
 def _parse(raw: str) -> str:

@@ -44,11 +44,9 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Experiments:
-      - 1. Off-the-shelf evaluation: experiments/1-offshelf-eval.md
-      - 2. Train classifiers: experiments/2-train-classifiers.md
-      - 3. Marma OOD curve: experiments/3-marma-curve.md
-      - 4. Add your language: experiments/4-add-your-language.md
-      - 5. Cross-benchmark: experiments/5-cross-benchmark.md
-  - Language code reconciliation: language-code-reconciliation.md
-  - Results: results.md
+  - Getting started: getting-started.md
+  - CLI reference: cli.md
+  - Notebooks: notebooks.md
+  - Datasets: datasets.md
+  - Bring your own dataset: bring-your-own-dataset.md
+  - Models: models.md
