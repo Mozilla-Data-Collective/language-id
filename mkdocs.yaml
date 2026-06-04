@@ -6,7 +6,24 @@ repo_name: Mozilla-Data-Collective/language-id
 edit_uri: edit/main/docs/
 
 theme:
+  icon:
+    repo: fontawesome/brands/github
   name: material
+  palette:
+    - scheme: default
+      primary: black
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    - scheme: slate
+      primary: grey
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
+  logo: docs/mdc_logo.png
+  favicon: docs/mdc_ccc.png
+  extra_css:
+    - assets/custom.css
   features:
     - navigation.sections
     - navigation.expand
@@ -14,19 +31,6 @@ theme:
     - content.code.copy
     - content.code.annotate
     - search.suggest
-  palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: indigo
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: indigo
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to light mode
 
 markdown_extensions:
   - admonition
@@ -34,14 +38,17 @@ markdown_extensions:
   - md_in_html
   - tables
   - pymdownx.details
-  - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
   - pymdownx.highlight:
       anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
   - toc:
       permalink: true
-
+  - pymdownx.tabbed:
+      alternate_style: true
 nav:
   - Home: index.md
   - Getting started: getting-started.md
@@ -50,3 +57,11 @@ nav:
   - Datasets: datasets.md
   - Bring your own dataset: bring-your-own-dataset.md
   - Models: models.md
+
+plugins:
+- search
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          show_root_heading: true

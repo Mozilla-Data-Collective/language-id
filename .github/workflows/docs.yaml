@@ -25,7 +25,7 @@ jobs:
         run: uv python install 3.12
 
       - name: Install docs dependencies
-        run: uv sync --extra dev
+        run: uv sync --extra docs
 
       - name: Build site
         run: uv run mkdocs build --strict

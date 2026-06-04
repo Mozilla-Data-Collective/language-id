@@ -47,10 +47,13 @@ dev = [
     "ruff>=0.6",
     "ty>=0.0.1a1",
     "pre-commit>=3.7",
-    "mkdocs>=1.6",
-    "mkdocs-material>=9.5",
     "nbconvert>=7.17.1",
     "ipykernel>=7.2.0",
+]
+docs = [
+  "mkdocs",
+  "mkdocs-material",
+  "mkdocstrings-python",
 ]
 
 [project.scripts]
