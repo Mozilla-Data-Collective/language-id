@@ -68,8 +68,9 @@ def eval(
         "0 is zero-shot. Only applies to LLMs; examples are held out from evaluation.",
     ),
     dataset: str = typer.Option(
-        "commonlid", "--dataset", help="'commonlid', 'commonvoice_lid', "
-                                       "or a Mozilla Data Collective dataset ID."
+        "commonlid",
+        "--dataset",
+        help="'commonlid', 'commonvoice_lid', or a Mozilla Data Collective dataset ID.",
     ),
     lang_col: str = typer.Option(
         "tag",
@@ -100,7 +101,9 @@ def eval(
         raise typer.BadParameter(f"--shot is only supported for LLMs, not {eval_model!r}.")
 
     typer.echo(f"Loading dataset: {dataset}")
-    df = _load(dataset, lang_col=lang_col, text_col=text_col, ground_truth_language=ground_truth_language)
+    df = _load(
+        dataset, lang_col=lang_col, text_col=text_col, ground_truth_language=ground_truth_language
+    )
 
     # Hold out the few-shot demonstrations before sampling so they never leak
     # into the evaluation set.
@@ -216,7 +219,6 @@ def eval_models() -> None:
     """List available eval model names (used with `eval --eval-model`)."""
     for name in available_eval_models():
         typer.echo(name)
-
 
 
 if __name__ == "__main__":

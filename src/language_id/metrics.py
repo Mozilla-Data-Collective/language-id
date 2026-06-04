@@ -27,11 +27,7 @@ def per_language(gold: Sequence[str], pred: Sequence[str]) -> pd.DataFrame:
         n_pred = int((df["pred"] == lang).sum())
         recall = tp / support if support else 0.0
         precision = tp / n_pred if n_pred else 0.0
-        f1 = (
-            2 * precision * recall / (precision + recall)
-            if (precision + recall)
-            else 0.0
-        )
+        f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
         rows.append(
             {
                 "lang": lang,

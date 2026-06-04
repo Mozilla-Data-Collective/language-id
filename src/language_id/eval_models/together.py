@@ -104,7 +104,9 @@ class TogetherModel:
         self._get_client()
         with ThreadPoolExecutor(max_workers=self.max_workers) as pool:
             # map preserves input order
-            return list(tqdm(pool.map(self.predict, texts), total=len(texts), desc=self.name, unit="text"))
+            return list(
+                tqdm(pool.map(self.predict, texts), total=len(texts), desc=self.name, unit="text")
+            )
 
 
 def _parse(raw: str) -> str:

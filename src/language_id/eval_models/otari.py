@@ -21,6 +21,7 @@ through the Otari client.
 
 PROVIDER_PREFIX = "together:"  # Otari routes these ids to the Together provider
 
+
 class OtariModel:
     """A chat LLM used as an LID classifier, served via the Otari gateway.
     Can be used as a drop-in replacement for a TogetherAI client.
@@ -53,7 +54,6 @@ class OtariModel:
 
     def _get_client(self) -> Any:
         if self._client is None:
-
             load_dotenv()
             token = os.getenv("OTARI_PLATFORM_TOKEN")
             if not token:

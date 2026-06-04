@@ -97,7 +97,7 @@ def load_runs(
     runs = [load_run(r, results_root) for r in run_ids]
     if dataset is not None:
         runs = [r for r in runs if r.dataset == dataset]
-    return sorted(runs, key=lambda r: (r.macro_f1 if pd.notna(r.macro_f1) else -1), reverse=True)
+    return sorted(runs, key=lambda r: r.macro_f1 if pd.notna(r.macro_f1) else -1, reverse=True)
 
 
 def check_comparable(runs: list[Run]) -> list[str]:
@@ -113,22 +113,26 @@ def check_comparable(runs: list[Run]) -> list[str]:
 
     datasets = {r.dataset for r in runs}
     if len(datasets) > 1:
-        warnings.append(f"Runs span different datasets: {sorted(datasets)} — not directly comparable.")
+        warnings.append(
+            f"Runs span different datasets: {sorted(datasets)} — not directly comparable."
+        )
 
     ns = {r.n for r in runs}
     if len(ns) > 1:
         warnings.append(f"Runs cover different sample counts (n): {sorted(ns)}.")
 
     # Same languages and same support per language -> same evaluation rows.
-    supports = [
-        r.per_language.set_index("lang")["support"].sort_index() for r in runs
-    ]
+    supports = [r.per_language.set_index("lang")["support"].sort_index() for r in runs]
     ref = supports[0]
     for run, sup in zip(runs[1:], supports[1:], strict=True):
         if not ref.index.equals(sup.index):
-            warnings.append(f"'{run.label}' covers a different set of languages than '{runs[0].label}'.")
+            warnings.append(
+                f"'{run.label}' covers a different set of languages than '{runs[0].label}'."
+            )
         elif not ref.equals(sup):
-            warnings.append(f"'{run.label}' has different per-language support than '{runs[0].label}'.")
+            warnings.append(
+                f"'{run.label}' has different per-language support than '{runs[0].label}'."
+            )
     return warnings
 
 
@@ -146,11 +150,7 @@ def overview_table(runs: list[Run]) -> pd.DataFrame:
         }
         for r in runs
     ]
-    return (
-        pd.DataFrame(rows)
-        .sort_values("macro_f1", ascending=False)
-        .reset_index(drop=True)
-    )
+    return pd.DataFrame(rows).sort_values("macro_f1", ascending=False).reset_index(drop=True)
 
 
 def per_language_pivot(runs: list[Run], metric: str = "f1") -> pd.DataFrame:
@@ -175,19 +175,17 @@ def per_language_pivot(runs: list[Run], metric: str = "f1") -> pd.DataFrame:
 def style_overview(table: pd.DataFrame) -> "pd.io.formats.style.Styler":
     """Color-graded view of :func:`overview_table` for notebook display."""
     metric_cols = [c for c in ("accuracy", "macro_f1") if c in table]
-    return (
-        table.style.format({c: "{:.3f}" for c in metric_cols})
-        .background_gradient(subset=metric_cols, cmap="Greens", vmin=0, vmax=1)
+    return table.style.format({c: "{:.3f}" for c in metric_cols}).background_gradient(
+        subset=metric_cols, cmap="Greens", vmin=0, vmax=1
     )
 
 
 def style_per_language(pivot: pd.DataFrame) -> "pd.io.formats.style.Styler":
     """Color-graded view of :func:`per_language_pivot` for notebook display."""
     model_cols = [c for c in pivot.columns if c != "support"]
-    return (
-        pivot.style.format({**{m: "{:.2f}" for m in model_cols}, "support": "{:.0f}"})
-        .background_gradient(subset=model_cols, cmap="RdYlGn", vmin=0, vmax=1)
-    )
+    return pivot.style.format(
+        {**{m: "{:.2f}" for m in model_cols}, "support": "{:.0f}"}
+    ).background_gradient(subset=model_cols, cmap="RdYlGn", vmin=0, vmax=1)
 
 
 def plot_overview(runs: list[Run], ax: plt.Axes | None = None) -> plt.Axes:

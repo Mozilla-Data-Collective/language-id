@@ -13,7 +13,6 @@ of two specialists:
   base model — nothing else changes. Needs the optional `finetune` extra.
 """
 
-
 from pathlib import Path
 from typing import Any
 

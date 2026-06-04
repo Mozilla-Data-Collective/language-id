@@ -12,6 +12,7 @@ COMMON_VOICE_LID_DATASET_ID = "mozilla-common-voice-text-language-ident-b1b3aae0
 LANG_COLUMN_NAME = "lang"
 TEXT_COLUMN_NAME = "sentence"
 
+
 # Every loader returns a DataFrame with a `text` column and a `lang` column normalized to ISO-639-3.
 def load_commonlid() -> pd.DataFrame:
     """Load CommonLID (evaluation set). Columns: text, lang (ISO-639-3), line_id."""
@@ -34,7 +35,9 @@ def load_commonvoice_lid(split: str | None = None) -> pd.DataFrame:
     return df
 
 
-def load_dataset_by_id(dataset_id: str, lang_col_name: str = "tag", text_col_name: str = "sentence") -> pd.DataFrame:
+def load_dataset_by_id(
+    dataset_id: str, lang_col_name: str = "tag", text_col_name: str = "sentence"
+) -> pd.DataFrame:
     """Load any datacollective dataset by ID (bring-your-own-dataset).
 
     Requires to have a `lang` column (normalized to ISO-639-3) and a
@@ -140,9 +143,7 @@ def take_fewshot_examples(
                 break
             if idx not in picked:
                 picked.append(idx)
-    examples = [
-        (str(df.at[i, TEXT_COLUMN_NAME]), str(df.at[i, LANG_COLUMN_NAME])) for i in picked
-    ]
+    examples = [(str(df.at[i, TEXT_COLUMN_NAME]), str(df.at[i, LANG_COLUMN_NAME])) for i in picked]
     remaining = df.drop(index=picked).reset_index(drop=True)
     return examples, remaining
 

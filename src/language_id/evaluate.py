@@ -8,7 +8,9 @@ from language_id.eval_models import LIDModel
 from language_id.lang_codes_mapping import to_iso3
 
 
-def evaluate(df: pd.DataFrame, model: LIDModel) -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame]:
+def evaluate(
+    df: pd.DataFrame, model: LIDModel
+) -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame]:
     """Evaluate `model` on `df` (which must have a `lang` gold column).
 
     Returns (overall, per_language_df, predictions_df). Predictions are

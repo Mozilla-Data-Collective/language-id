@@ -11,7 +11,6 @@ back to the `langcodes` library for tags not in the table (e.g. region subtags)
 and returns "und" if unresolvable.
 """
 
-
 import csv
 from functools import lru_cache
 from pathlib import Path
