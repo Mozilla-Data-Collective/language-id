@@ -11,7 +11,7 @@ This project provides tools to measure and close that gap using datasets from th
 ## Where to go next
 
 - [Getting started](getting-started.md): Quick project overview and installation instructions.
-- [CLI reference](cli.md): The `language-id` command: `eval`, `train`, and `models`.
+- [CLI reference](cli.md): The `language-id` command: `eval`, `train`, and `eval-models`.
 - [Notebooks](notebooks.md): Interactive walkthroughs of evaluation, comparison, and training.
 - [Bring-your-own-dataset](bring-your-own-dataset.md): Guide on how to evaluate and train on any MDC text dataset.
 - [Datasets](datasets.md): Information on the datasets used.

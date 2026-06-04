@@ -10,15 +10,16 @@ from language_id.data import (
     sample,
     take_fewshot_examples,
 )
+from language_id.eval_models import TOGETHER_MODELS, available_eval_models, get_eval_model
 from language_id.evaluate import evaluate
-from language_id.models import TOGETHER_MODELS, available_models, get_model
 from language_id.reporting import save_run
 from language_id.train import (
     DEFAULT_HF_MODEL_ID,
     build_training_data,
     evaluate_detector,
     finetune_llm,
-    train_logreg, train_naive_bayes,
+    train_logreg,
+    train_naive_bayes,
 )
 
 MAX_SHOTS = 10
@@ -50,7 +51,13 @@ def _load(
 
 @app.command()
 def eval(
-    model: str = typer.Option(..., "--model", "-m", help="Model name (see `language-id models`)."),
+    eval_model: str = typer.Option(
+        ...,
+        "--eval-model",
+        "-m",
+        help="Eval model: an off-the-shelf model to evaluate (see `language-id eval-models`). "
+        "Not to be confused with the train models of `language-id train`.",
+    ),
     n: int = typer.Option(0, "--n", help="Samples per language. Use 0 for the whole dataset."),
     shot: int = typer.Option(
         0,
@@ -88,9 +95,9 @@ def eval(
         True, "--save/--no-save", help="Save predictions, metrics, and graphs to results/."
     ),
 ) -> None:
-    """Evaluate `model` on the dataset. By default, samples `n` rows per language; `--n 0` uses every row."""
-    if shot > 0 and model not in TOGETHER_MODELS:
-        raise typer.BadParameter(f"--shot is only supported for LLMs, not {model!r}.")
+    """Evaluate `eval_model` on the dataset. By default, samples `n` rows per language; `--n 0` uses every row."""
+    if shot > 0 and eval_model not in TOGETHER_MODELS:
+        raise typer.BadParameter(f"--shot is only supported for LLMs, not {eval_model!r}.")
 
     typer.echo(f"Loading dataset: {dataset}")
     df = _load(dataset, lang_col=lang_col, text_col=text_col, ground_truth_language=ground_truth_language)
@@ -112,10 +119,10 @@ def eval(
         typer.echo(f"Using whole dataset: {len(df)} rows across {df['lang'].nunique()} languages.")
 
     # Label few-shot runs distinctly so saved results compare cleanly (e.g. 0- vs 2-shot).
-    label = f"{model}-{shot}shot" if shot else model
-    model_obj = get_model(model, examples=examples or None)
+    label = f"{eval_model}-{shot}shot" if shot else eval_model
+    model_obj = get_eval_model(eval_model, examples=examples or None)
     model_obj.name = label
-    typer.echo(f"Evaluating model: {label}")
+    typer.echo(f"Evaluating eval model: {label}")
     overall, per_lang, predictions = evaluate(df, model_obj)
 
     typer.echo("")
@@ -140,13 +147,17 @@ def train(
     lang: str = typer.Option(
         ..., "--lang", help="Target language of every row (any code/name form, e.g. 'lad')."
     ),
-    method: str = typer.Option(
-        "naive_bayes", "--method", help="'naive_bayes' (char n-gram naive bayes), 'logreg' (char n-gram logistic regression) or 'llm' (fine-tune a HF model)."
+    train_model: str = typer.Option(
+        "naive_bayes",
+        "--train-model",
+        help="Train model: the kind of model to train — 'naive_bayes' (char n-gram naive bayes), "
+        "'logreg' (char n-gram logistic regression) or 'llm' (fine-tune a HF model). "
+        "Not to be confused with the eval models of `language-id eval`.",
     ),
     hf_model_id: str = typer.Option(
         DEFAULT_HF_MODEL_ID,
         "--hf-model-id",
-        help="Hugging Face model id to fine-tune (only used with --method llm).",
+        help="Hugging Face model id to fine-tune (only used with --train-model llm).",
     ),
     epochs: float = typer.Option(3, "--epochs", help="Fine-tuning epochs (LLM only)."),
     batch_size: int = typer.Option(8, "--batch-size", help="Fine-tuning batch size (LLM only)."),
@@ -161,11 +172,12 @@ def train(
     """Train a single-language detector and report its detection scores on a held-out test split.
 
     Builds a binary problem (target language vs. Common Voice LID negatives) and fits either a
-    char n-gram logistic regression (`--method logreg`) or a fine-tuned HF model
-    (`--method llm --hf-model-id ...`, needs the `finetune` extra).
+    char n-gram naive Bayes (`--train-model naive_bayes`), a char n-gram logistic regression
+    (`--train-model logreg`) or a fine-tuned HF model
+    (`--train-model llm --hf-model-id ...`, needs the `finetune` extra).
     """
-    if method not in {"naive_bayes", "logreg", "llm"}:
-        raise typer.BadParameter("--method must be 'naive_bayes', 'logreg' or 'llm'.")
+    if train_model not in {"naive_bayes", "logreg", "llm"}:
+        raise typer.BadParameter("--train-model must be 'naive_bayes', 'logreg' or 'llm'.")
 
     typer.echo(f"Building training data from {dataset} (target language: {lang}) ...")
     train_df, test_df = build_training_data(
@@ -177,10 +189,10 @@ def train(
         f"  |  test: {len(test_df)} rows"
     )
 
-    if method == "naive_bayes":
+    if train_model == "naive_bayes":
         typer.echo("Training char n-gram Naive Bayes model ...")
         model = train_naive_bayes(train_df)
-    elif method == "logreg":
+    elif train_model == "logreg":
         typer.echo("Training char n-gram logistic regression ...")
         model = train_logreg(train_df)
     else:
@@ -199,10 +211,10 @@ def train(
     typer.echo(f"  n (test)  : {scores['n']}")
 
 
-@app.command()
-def models() -> None:
-    """List available model names."""
-    for name in available_models():
+@app.command(name="eval-models")
+def eval_models() -> None:
+    """List available eval model names (used with `eval --eval-model`)."""
+    for name in available_eval_models():
         typer.echo(name)
 
 

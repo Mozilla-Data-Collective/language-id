@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 from otari import OtariClient
 from tqdm import tqdm
 
-from language_id.models.base import LIDPrediction
-from language_id.models.together import SYSTEM_PROMPT, USER_TEMPLATE, _parse
+from language_id.eval_models.base import LIDPrediction
+from language_id.eval_models.together import SYSTEM_PROMPT, USER_TEMPLATE, _parse
 
 """
 NOTE: Right now this client is not used for LLM inference. Its placed here for future

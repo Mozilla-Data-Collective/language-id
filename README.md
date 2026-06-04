@@ -25,7 +25,7 @@ MDC_API_KEY=your-api-key-here
 2. **Evaluate a model** on the CommonLID benchmark:
 
 ```bash
-uv run language-id eval --model glotlid --dataset commonlid --n 200
+uv run language-id eval --eval-model glotlid --dataset commonlid --n 200
 ```
 
 3. **Train your own single-language detector** for any language with a text corpus on MDC:

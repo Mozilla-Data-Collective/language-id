@@ -41,11 +41,11 @@ From the CLI, this path corresponds to passing the dataset ID and column names d
 
 ```bash
 # Multilingual dataset with its own language column
-uv run language-id eval --model glotlid --dataset your-dataset-id \
+uv run language-id eval --eval-model glotlid --dataset your-dataset-id \
     --lang-col tag --text-col text
 
 # Single-language dataset: every row's gold label is the given language
-uv run language-id eval --model glotlid --dataset your-dataset-id \
+uv run language-id eval --eval-model glotlid --dataset your-dataset-id \
     --ground-truth-language lad
 ```
 
@@ -53,9 +53,9 @@ Or in Python, pass the DataFrame straight to `evaluate`:
 
 ```python
 from language_id.evaluate import evaluate
-from language_id.models import get_model
+from language_id.eval_models import get_eval_model
 
-overall, per_lang, predictions = evaluate(df, get_model("glotlid"))
+overall, per_lang, predictions = evaluate(df, get_eval_model("glotlid"))
 print(overall)
 ```
 
@@ -80,15 +80,15 @@ A DataFrame built this way feeds directly into `evaluate`, exactly as in Path 1:
 
 ```python
 from language_id.evaluate import evaluate
-from language_id.models import get_model
+from language_id.eval_models import get_eval_model
 
-overall, per_lang, predictions = evaluate(df, get_model("glotlid"))
+overall, per_lang, predictions = evaluate(df, get_eval_model("glotlid"))
 ```
 
 For **training**, `language-id train` already uses this path under the hood: `build_training_data` calls `download_and_load_single_language_text_dataset` to load your corpus as positives and pairs it with Common Voice LID negatives. So for a single-language `.txt`-archive corpus, training is one command:
 
 ```bash
-uv run language-id train --dataset your-dataset-id --lang lad --method naive_bayes
+uv run language-id train --dataset your-dataset-id --lang lad --train-model naive_bayes
 ```
 
 If your corpus needs custom parsing, load it with your own function (as above) and use the training building blocks directly:

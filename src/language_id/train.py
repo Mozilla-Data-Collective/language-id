@@ -27,11 +27,11 @@ from sklearn.pipeline import Pipeline
 from language_id.data import (
     LANG_COLUMN_NAME,
     TEXT_COLUMN_NAME,
-    load_commonvoice_lid,
     download_and_load_single_language_text_dataset,
+    load_commonvoice_lid,
 )
+from language_id.eval_models.base import LIDModel, LIDPrediction
 from language_id.lang_codes_mapping import to_iso3
-from language_id.models.base import LIDModel, LIDPrediction
 
 # Label used for every non-target sentence in the binary problem.
 OTHER_LABEL = "other"

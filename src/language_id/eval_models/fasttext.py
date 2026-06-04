@@ -2,8 +2,8 @@ from typing import Any
 
 from tqdm import tqdm
 
+from language_id.eval_models.base import LIDPrediction
 from language_id.lang_codes_mapping import to_iso3
-from language_id.models.base import LIDPrediction
 
 
 class FastTextLIDBase:

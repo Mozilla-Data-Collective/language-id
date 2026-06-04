@@ -18,7 +18,7 @@ Any MDC dataset with a text column and a language column can be evaluated by pas
 > See the dedicated [Bring your own dataset](bring-your-own-dataset.md) guide for the two ways to load an MDC dataset (`load_dataset` vs. `download_dataset` + custom parsing) and full evaluate/train examples.
 
 ```bash
-uv run language-id eval --model glotlid --dataset your-dataset-id \
+uv run language-id eval --eval-model glotlid --dataset your-dataset-id \
     --lang-col tag --text-col sentence
 ```
 
@@ -28,7 +28,7 @@ uv run language-id eval --model glotlid --dataset your-dataset-id \
 For a corpus that is entirely in one language (so it has no language column), pass `--ground-truth-language`: every row's gold label becomes that language, and only the text column is needed.
 
 ```bash
-uv run language-id eval --model glotlid --dataset your-dataset-id \
+uv run language-id eval --eval-model glotlid --dataset your-dataset-id \
     --ground-truth-language lad
 ```
 
