@@ -435,6 +435,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#train-and-evaluate-a-local-lid-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Train and evaluate a local LID model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-new-language-to-lid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a new language to LID
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -583,6 +605,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#train-and-evaluate-a-local-lid-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Train and evaluate a local LID model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-new-language-to-lid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a new language to LID
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -631,6 +675,23 @@
 <li>Trains a fast CPU classifier (character n-gram naive Bayes), and optionally fine-tunes a Hugging Face model (e.g. <code>Qwen/Qwen3-0.6B</code>; needs the <code>finetune</code> extra) as a stronger specialist.</li>
 <li>Evaluates every detector — including baselines such as GlotLID and zero-shot LLMs — on the same held-out test split and plots their detection scores side by side.</li>
 <li>The same workflow is available non-interactively as <code>language-id train</code> (see the <a href="../cli/">CLI reference</a>).</li>
+</ul>
+<h2 id="train-and-evaluate-a-local-lid-model">Train and evaluate a local LID model<a class="headerlink" href="#train-and-evaluate-a-local-lid-model" title="Permanent link">&para;</a></h2>
+<p><strong><code>train-and-evaluate-local-lid.ipynb</code></strong> — a tutorial that builds a multi-class language detector locally and explains the process step-by-step.</p>
+<ul>
+<li>Trains a single character n-gram + Multinomial Naive Bayes classifier over <strong>all</strong> languages in Common Voice LID (300+).</li>
+<li>Walks through the modeling choices: why character n-grams beat word features for LID, why a <code>HashingVectorizer</code> keeps memory constant on a 20M-row corpus, and how Naive Bayes (with Laplace smoothing and optional <code>partial_fit</code> online learning) fits the problem. An <code>SGDClassifier</code> linear-SVM alternative is included as a commented swap-in.</li>
+<li>Downloads and subsamples CV-LID (default 15%) into train/dev/test splits by streaming the TSV in chunks, then evaluates on both the held-out CV-LID dev split and the cross-domain CommonLID benchmark, including a plot of how differently the two datasets distribute languages.</li>
+<li>Includes error-analysis helpers like <code>show_worst_languages</code> ranks languages by F1 (with a minimum-support filter to ignore tiny test sets) and <code>show_confusions</code> shows which languages a given one is mistaken for, to make data-scarcity and closely-related-language failures visible.</li>
+<li>A good starting point if you want to understand the mechanics behind <code>language-id train</code> before using the CLI.</li>
+</ul>
+<h2 id="add-a-new-language-to-lid">Add a new language to LID<a class="headerlink" href="#add-a-new-language-to-lid" title="Permanent link">&para;</a></h2>
+<p><strong><code>add-new-language-to-lid.ipynb</code></strong> — bootstrap support for a language that an off-the-shelf model handles poorly (or not at all) by folding your own corpus into the training and evaluation data.</p>
+<ul>
+<li>Builds on the local training pipeline above: it sets a <code>TARGET_LANG</code> (ISO 639-3), checks whether that language is already present in CV-LID, and reports whether you are reinforcing an existing language or adding one from scratch.</li>
+<li>Loads a single-language corpus from MDC (the notebook uses Ladino, with a Gujarati variant shown in commented cells), concatenates it into the CV-LID training set, and appends a held-out test set for the language to CommonLID.</li>
+<li>Retrains the same character n-gram Naive Bayes classifier on the augmented data and prints a <code>classification_report</code> so you can see the new language's precision/recall/F1 alongside the existing ones.</li>
+<li>Useful for quickly answering <em>"how much does a modest amount of in-language text move the needle?"</em> before committing to a full single-language detector or fine-tune.</li>
 </ul>
 
 
