@@ -43,6 +43,8 @@ Run `uv run language-id --help` to see all commands and options.
 |---|--------------------------------------------------------------------------------------------------------------------|
 | [run-model-evaluation](src/language_id/notebooks/run-model-evaluation.ipynb) | Benchmark off-the-shelf LID tools and LLMs (zero- and few-shot) side by side on CommonLID or Common Voice LID.     |
 | [train-single-language-detector](src/language_id/notebooks/train-single-language-detector.ipynb) | Train a specialist LID detector for a single language and compare it against off-the-shelf baselines. |
+| [train-and-evaluate-local-lid](src/language_id/notebooks/train-and-evaluate-local-lid.ipynb) | From-scratch tutorial: train a full multi-class character n-gram + Naive Bayes detector locally, evaluate it, and analyse its errors. |
+| [add-new-language-to-lid](src/language_id/notebooks/add-new-language-to-lid.ipynb) | Add support for a new (often low-resource) language by folding your own corpus into the training and evaluation data. |
 | [compare-saved-runs](src/language_id/notebooks/compare-saved-runs.ipynb) | Helper notebook to compare experimental results (saved runs) and create tables and graphs for further analysis.    |
 
 ## For more details, visit [our docs](https://mozilla-data-collective.github.io/language-id/)
