@@ -178,8 +178,6 @@
         </button>
       </nav>
       
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -649,7 +647,7 @@
   
 
 
-<h1 id="bring-your-own-dataset">Bring your own dataset<a class="headerlink" href="#bring-your-own-dataset" title="Permanent link">&para;</a></h1>
+<h1 id="bring-your-own-dataset">Bring your own dataset</h1>
 <p>Any text dataset hosted on the <a href="https://mozilladatacollective.com/">Mozilla Data Collective</a> platform can be plugged into this project for evaluation or training, given that the license and terms &amp; conditions approve of such usage. There are two ways to get an MDC dataset into the pipeline, depending on its format:</p>
 <table>
 <thead>
@@ -678,7 +676,7 @@
 <li>a <strong><code>lang</code></strong> column: the gold language label, normalized to <strong>ISO-639-3</strong> with <code>to_iso3</code> (see <a href="../datasets/#language-code-normalization">Datasets</a>).</li>
 </ul>
 <p>Once your data is in that shape, every downstream piece (evaluation, training, metrics, plots) works unchanged.</p>
-<h2 id="path-1-load-the-dataset-directly">Path 1: Load the dataset directly<a class="headerlink" href="#path-1-load-the-dataset-directly" title="Permanent link">&para;</a></h2>
+<h2 id="path-1-load-the-dataset-directly">Path 1: Load the dataset directly</h2>
 <p>If the SDK's <code>load_dataset</code> supports the dataset's format, <code>load_dataset_by_id</code> is all you need: it loads the DataFrame, renames your columns to the project conventions, and normalizes the language labels:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">language_id.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset_by_id</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -692,7 +690,7 @@
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">df</span> <span class="o">=</span> <span class="n">load_single_language_dataset</span><span class="p">(</span><span class="s2">&quot;your-dataset-id&quot;</span><span class="p">,</span> <span class="n">ground_truth_language</span><span class="o">=</span><span class="s2">&quot;lad&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<h3 id="evaluate-it">Evaluate it<a class="headerlink" href="#evaluate-it" title="Permanent link">&para;</a></h3>
+<h3 id="evaluate-it">Evaluate it</h3>
 <p>From the CLI, this path corresponds to passing the dataset ID and column names directly:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Multilingual dataset with its own language column</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>run<span class="w"> </span>language-id<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>--eval-model<span class="w"> </span>glotlid<span class="w"> </span>--dataset<span class="w"> </span>your-dataset-id<span class="w"> </span><span class="se">\</span>
@@ -709,7 +707,7 @@
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">overall</span><span class="p">,</span> <span class="n">per_lang</span><span class="p">,</span> <span class="n">predictions</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">get_eval_model</span><span class="p">(</span><span class="s2">&quot;glotlid&quot;</span><span class="p">))</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">overall</span><span class="p">)</span>
 </span></code></pre></div>
-<h2 id="path-2-download-the-archive-and-parse-it-yourself">Path 2: Download the archive and parse it yourself<a class="headerlink" href="#path-2-download-the-archive-and-parse-it-yourself" title="Permanent link">&para;</a></h2>
+<h2 id="path-2-download-the-archive-and-parse-it-yourself">Path 2: Download the archive and parse it yourself</h2>
 <p>Some datasets can't be used with <code>load_dataset</code> as of today. For those, use the SDK's <code>download_dataset</code> to fetch the raw archive, then write the appropriate parsing logic.</p>
 <p><code>download_and_load_single_language_text_dataset</code> in <code>src/language_id/data.py</code> is the reference implementation of this path: it downloads the archive, extracts it, reads every <code>.txt</code> file (one sentence per line) into the standard <code>sentence</code>/<code>lang</code> DataFrame, and drops empty lines:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">language_id.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_and_load_single_language_text_dataset</span>
@@ -719,7 +717,7 @@
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>  <span class="c1"># columns: sentence, lang (ISO-639-3)</span>
 </span></code></pre></div>
-<h3 id="evaluate-or-train-with-it">Evaluate or train with it<a class="headerlink" href="#evaluate-or-train-with-it" title="Permanent link">&para;</a></h3>
+<h3 id="evaluate-or-train-with-it">Evaluate or train with it</h3>
 <p>A DataFrame built this way feeds directly into <code>evaluate</code>, exactly as in Path 1:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">language_id.evaluate</span><span class="w"> </span><span class="kn">import</span> <span class="n">evaluate</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">language_id.eval_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_eval_model</span>
@@ -760,12 +758,6 @@
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
-          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  Back to top
-</button>
-        
       </main>
       
         <footer class="md-footer">
@@ -795,7 +787,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>

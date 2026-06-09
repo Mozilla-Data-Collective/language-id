@@ -178,8 +178,6 @@
         </button>
       </nav>
       
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -647,12 +645,12 @@
   
 
 
-<h1 id="notebooks">Notebooks<a class="headerlink" href="#notebooks" title="Permanent link">&para;</a></h1>
+<h1 id="notebooks">Notebooks</h1>
 <p>The notebooks under <a href="https://github.com/Mozilla-Data-Collective/language-id/tree/main/src/language_id/notebooks"><code>src/language_id/notebooks/</code></a> are interactive walkthroughs of the same building blocks the CLI uses. Launch them with your editor of choice or with Jupyter:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>jupyter<span class="w"> </span>lab<span class="w"> </span>src/language_id/notebooks/
 </span></code></pre></div>
 <p>All notebooks read the API keys from the repo-root <code>.env</code> file (see <a href="../getting-started/">Getting started</a>).</p>
-<h2 id="run-model-evaluation">Run model evaluation<a class="headerlink" href="#run-model-evaluation" title="Permanent link">&para;</a></h2>
+<h2 id="run-model-evaluation">Run model evaluation</h2>
 <p><strong><code>run-model-evaluation.ipynb</code></strong> — benchmark several LID models side by side in one go.</p>
 <ul>
 <li>Pick a dataset (<code>commonlid</code> or <code>commonvoice_lid</code>), a per-language sample size, and a set of models: standard tools (langdetect, GlotLID, NLLB-LID) and/or LLMs served via Together.</li>
@@ -660,7 +658,7 @@
 <li>Produces an overview comparison table and figure, a per-language F1 heatmap, and a "where models disagree most" breakdown.</li>
 <li>Each individual evaluation is saved to <code>results/</code> in the same format as <code>language-id eval</code>, so runs can be revisited later.</li>
 </ul>
-<h2 id="compare-saved-runs">Compare saved runs<a class="headerlink" href="#compare-saved-runs" title="Permanent link">&para;</a></h2>
+<h2 id="compare-saved-runs">Compare saved runs</h2>
 <p><strong><code>compare-saved-runs.ipynb</code></strong> — post-hoc analysis of runs you have already computed.</p>
 <ul>
 <li>Every <code>language-id eval</code> run (and every run from the evaluation notebook) is saved under <code>results/&lt;model&gt;_&lt;dataset&gt;_&lt;timestamp&gt;/</code>. This notebook discovers those runs, lets you pick a set of them, and compares them side by side <strong>without re-running any model</strong>.</li>
@@ -668,7 +666,7 @@
 <li>Includes a comparability check: only runs on the same dataset with the same per-language support are compared, so the comparison stays fair.</li>
 <li>Outputs an overview table, a per-language heatmap, and a disagreement plot; comparison figures are written to <code>results/comparisons/</code>.</li>
 </ul>
-<h2 id="train-a-single-language-detector">Train a single-language detector<a class="headerlink" href="#train-a-single-language-detector" title="Permanent link">&para;</a></h2>
+<h2 id="train-a-single-language-detector">Train a single-language detector</h2>
 <p><strong><code>train-single-language-detector.ipynb</code></strong> — build a specialist detector for one (typically low-resource) language and see how it stacks up against off-the-shelf models.</p>
 <ul>
 <li>Starts from a single-language text corpus on MDC (the notebook uses Ladino as the running example) and pairs it with Common Voice LID negatives to form a binary detection problem.</li>
@@ -676,7 +674,7 @@
 <li>Evaluates every detector — including baselines such as GlotLID and zero-shot LLMs — on the same held-out test split and plots their detection scores side by side.</li>
 <li>The same workflow is available non-interactively as <code>language-id train</code> (see the <a href="../cli/">CLI reference</a>).</li>
 </ul>
-<h2 id="train-and-evaluate-a-local-lid-model">Train and evaluate a local LID model<a class="headerlink" href="#train-and-evaluate-a-local-lid-model" title="Permanent link">&para;</a></h2>
+<h2 id="train-and-evaluate-a-local-lid-model">Train and evaluate a local LID model</h2>
 <p><strong><code>train-and-evaluate-local-lid.ipynb</code></strong> — a tutorial that builds a multi-class language detector locally and explains the process step-by-step.</p>
 <ul>
 <li>Trains a single character n-gram + Multinomial Naive Bayes classifier over <strong>all</strong> languages in Common Voice LID (300+).</li>
@@ -685,7 +683,7 @@
 <li>Includes error-analysis helpers like <code>show_worst_languages</code> ranks languages by F1 (with a minimum-support filter to ignore tiny test sets) and <code>show_confusions</code> shows which languages a given one is mistaken for, to make data-scarcity and closely-related-language failures visible.</li>
 <li>A good starting point if you want to understand the mechanics behind <code>language-id train</code> before using the CLI.</li>
 </ul>
-<h2 id="add-a-new-language-to-lid">Add a new language to LID<a class="headerlink" href="#add-a-new-language-to-lid" title="Permanent link">&para;</a></h2>
+<h2 id="add-a-new-language-to-lid">Add a new language to LID</h2>
 <p><strong><code>add-new-language-to-lid.ipynb</code></strong> — bootstrap support for a language that an off-the-shelf model handles poorly (or not at all) by folding your own corpus into the training and evaluation data.</p>
 <ul>
 <li>Builds on the local training pipeline above: it sets a <code>TARGET_LANG</code> (ISO 639-3), checks whether that language is already present in CV-LID, and reports whether you are reinforcing an existing language or adding one from scratch.</li>
@@ -712,12 +710,6 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
-        
-          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  Back to top
-</button>
         
       </main>
       
@@ -748,7 +740,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>

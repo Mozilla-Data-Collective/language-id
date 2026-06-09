@@ -178,8 +178,6 @@
         </button>
       </nav>
       
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -637,9 +635,9 @@
   
 
 
-<h1 id="datasets">Datasets<a class="headerlink" href="#datasets" title="Permanent link">&para;</a></h1>
+<h1 id="datasets">Datasets</h1>
 <p>All datasets are accessed through the <a href="https://mozilladatacollective.com/">Mozilla Data Collective</a> platform via the <a href="https://github.com/Mozilla-Data-Collective/datacollective-python"><code>datacollective</code></a> Python SDK, which requires <code>MDC_API_KEY</code> (see <a href="../getting-started/">Getting started</a>). Before accessing any dataset, make sure you have read and agreed to that dataset's conditions and licensing terms. Downloads are cached locally, so each dataset is fetched only once.</p>
-<h2 id="built-in-datasets">Built-in datasets<a class="headerlink" href="#built-in-datasets" title="Permanent link">&para;</a></h2>
+<h2 id="built-in-datasets">Built-in datasets</h2>
 <p>These two are available by name in <code>language-id eval --dataset ...</code>:</p>
 <table>
 <thead>
@@ -662,7 +660,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="bring-your-own-dataset">Bring-your-own-dataset<a class="headerlink" href="#bring-your-own-dataset" title="Permanent link">&para;</a></h2>
+<h2 id="bring-your-own-dataset">Bring-your-own-dataset</h2>
 <p>Any MDC dataset with a text column and a language column can be evaluated by passing its dataset ID:</p>
 <blockquote>
 <p>See the dedicated <a href="../bring-your-own-dataset/">Bring your own dataset</a> guide for the two ways to load an MDC dataset (<code>load_dataset</code> vs. <code>download_dataset</code> + custom parsing) and full evaluate/train examples.</p>
@@ -670,13 +668,13 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>language-id<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>--eval-model<span class="w"> </span>glotlid<span class="w"> </span>--dataset<span class="w"> </span>your-dataset-id<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>--lang-col<span class="w"> </span>tag<span class="w"> </span>--text-col<span class="w"> </span>sentence
 </span></code></pre></div>
-<h3 id="single-language-corpora">Single-language corpora<a class="headerlink" href="#single-language-corpora" title="Permanent link">&para;</a></h3>
+<h3 id="single-language-corpora">Single-language corpora</h3>
 <p>For a corpus that is entirely in one language (so it has no language column), pass <code>--ground-truth-language</code>: every row's gold label becomes that language, and only the text column is needed.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>language-id<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>--eval-model<span class="w"> </span>glotlid<span class="w"> </span>--dataset<span class="w"> </span>your-dataset-id<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span>--ground-truth-language<span class="w"> </span>lad
 </span></code></pre></div>
 <p>Single-language corpora are also the input to <code>language-id train</code>, which pairs them with Common Voice LID negatives to train a detector — see the <a href="../cli/">CLI reference</a>.</p>
-<h2 id="language-code-normalization">Language code normalization<a class="headerlink" href="#language-code-normalization" title="Permanent link">&para;</a></h2>
+<h2 id="language-code-normalization">Language code normalization</h2>
 <p>Datasets and models label languages inconsistently — ISO-639-1 (<code>en</code>), ISO-639-3 (<code>eng</code>), BCP-47 tags (<code>en-US</code>), or plain names (<code>English</code>). Every loader and every model prediction is normalized to <strong>ISO-639-3</strong> (via <a href="https://pypi.org/project/langcodes/"><code>langcodes</code></a> plus a project-level mapping in <code>src/language_id/lang_codes_mapping.csv</code>), so metrics are always computed on a consistent label space. Anywhere the CLI accepts a language (<code>--langs</code>, <code>--lang</code>, <code>--ground-truth-language</code>), any code or name form works.</p>
 
 
@@ -697,12 +695,6 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
-        
-          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  Back to top
-</button>
         
       </main>
       
@@ -733,7 +725,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>

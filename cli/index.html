@@ -178,8 +178,6 @@
         </button>
       </nav>
       
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -693,7 +691,7 @@
   
 
 
-<h1 id="cli-reference">CLI reference<a class="headerlink" href="#cli-reference" title="Permanent link">&para;</a></h1>
+<h1 id="cli-reference">CLI reference</h1>
 <p>The package installs a single command, <code>language-id</code>, with three subcommands:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>language-id<span class="w"> </span>--help
 </span></code></pre></div>
@@ -728,7 +726,7 @@
 </ul>
 <p>See <a href="../models/">Models</a> for details on both families.</p>
 </div>
-<h2 id="language-id-eval"><code>language-id eval</code><a class="headerlink" href="#language-id-eval" title="Permanent link">&para;</a></h2>
+<h2 id="language-id-eval"><code>language-id eval</code></h2>
 <p>Evaluate a model on a dataset. By default it samples <code>--n</code> rows per language; <code>--n 0</code> uses every row.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Standard tool on the CommonLID benchmark, 200 rows per language</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>run<span class="w"> </span>language-id<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>--eval-model<span class="w"> </span>glotlid<span class="w"> </span>--dataset<span class="w"> </span>commonlid<span class="w"> </span>--n<span class="w"> </span><span class="m">200</span>
@@ -742,7 +740,7 @@
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># A single-language corpus: every row&#39;s gold label is the given language</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>uv<span class="w"> </span>run<span class="w"> </span>language-id<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>--eval-model<span class="w"> </span>glotlid<span class="w"> </span>--dataset<span class="w"> </span>your-dataset-id<span class="w"> </span>--ground-truth-language<span class="w"> </span>lad
 </span></code></pre></div>
-<h3 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h3>
+<h3 id="options">Options</h3>
 <table>
 <thead>
 <tr>
@@ -804,7 +802,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<h3 id="output">Output</h3>
 <p>Each run prints overall accuracy and macro F1 plus a per-language table, and (with <code>--save</code>) writes a timestamped directory:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>results/&lt;model&gt;_&lt;dataset&gt;_&lt;timestamp&gt;/
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    predictions.csv               every row with gold, pred, confidence, raw output
@@ -815,7 +813,7 @@
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    plots/confusion_matrix.png
 </span></code></pre></div>
 <p>A one-line summary is also appended to <code>results/runs.jsonl</code>, which the <a href="../notebooks/">compare-saved-runs notebook</a> uses to compare runs across models.</p>
-<h2 id="language-id-train"><code>language-id train</code><a class="headerlink" href="#language-id-train" title="Permanent link">&para;</a></h2>
+<h2 id="language-id-train"><code>language-id train</code></h2>
 <p>Train a detector for a single target language and report precision/recall/F1 on a held-out test split. 
 The command turns a single-language text corpus into a binary problem: <em>is this sentence the target language or not?</em> 
 by pairing its sentences (positives) with other-language sentences from Common Voice LID (negatives).</p>
@@ -826,7 +824,7 @@ by pairing its sentences (positives) with other-language sentences from Common V
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>uv<span class="w"> </span>run<span class="w"> </span>language-id<span class="w"> </span>train<span class="w"> </span>--dataset<span class="w"> </span>your-dataset-id<span class="w"> </span>--lang<span class="w"> </span>lad<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--train-model<span class="w"> </span>llm<span class="w"> </span>--hf-model-id<span class="w"> </span>Qwen/Qwen3-0.6B<span class="w"> </span>--epochs<span class="w"> </span><span class="m">3</span><span class="w"> </span>--batch-size<span class="w"> </span><span class="m">8</span>
 </span></code></pre></div>
-<h3 id="options_1">Options<a class="headerlink" href="#options_1" title="Permanent link">&para;</a></h3>
+<h3 id="options_1">Options</h3>
 <table>
 <thead>
 <tr>
@@ -883,7 +881,7 @@ by pairing its sentences (positives) with other-language sentences from Common V
 </tr>
 </tbody>
 </table>
-<h2 id="language-id-eval-models"><code>language-id eval-models</code><a class="headerlink" href="#language-id-eval-models" title="Permanent link">&para;</a></h2>
+<h2 id="language-id-eval-models"><code>language-id eval-models</code></h2>
 <p>Lists every eval model name accepted by <code>eval --eval-model</code>, i.e. the standard tools plus the LLMs currently registered. See <a href="../models/">Models</a> for what each one is.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>run<span class="w"> </span>language-id<span class="w"> </span>eval-models
 </span></code></pre></div>
@@ -906,12 +904,6 @@ by pairing its sentences (positives) with other-language sentences from Common V
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
-        
-          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  Back to top
-</button>
         
       </main>
       
@@ -942,7 +934,7 @@ by pairing its sentences (positives) with other-language sentences from Common V
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
