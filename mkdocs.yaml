@@ -5,6 +5,15 @@ repo_url: https://github.com/Mozilla-Data-Collective/language-id
 repo_name: Mozilla-Data-Collective/language-id
 edit_uri: edit/main/docs/
 
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - CLI reference: cli.md
+  - Notebooks: notebooks.md
+  - Datasets: datasets.md
+  - Bring your own dataset: bring-your-own-dataset.md
+  - Models: models.md
+
 theme:
   icon:
     repo: fontawesome/brands/github
@@ -25,19 +34,11 @@ theme:
   extra_css:
     - assets/custom.css
   features:
-    - navigation.sections
-    - navigation.expand
-    - navigation.top
     - content.code.copy
     - content.code.annotate
-    - search.suggest
 
 markdown_extensions:
   - admonition
-  - attr_list
-  - md_in_html
-  - tables
-  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -45,18 +46,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
-  - toc:
-      permalink: true
   - pymdownx.tabbed:
       alternate_style: true
-nav:
-  - Home: index.md
-  - Getting started: getting-started.md
-  - CLI reference: cli.md
-  - Notebooks: notebooks.md
-  - Datasets: datasets.md
-  - Bring your own dataset: bring-your-own-dataset.md
-  - Models: models.md
 
 plugins:
 - search
